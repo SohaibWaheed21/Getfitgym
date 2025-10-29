@@ -355,30 +355,118 @@
            Remove this in production and load from database
         ============================================ */
         
-        function loadSampleData() {
-            const today = new Date();
-            const pastDate = new Date(today.getTime() - (35 * 24 * 60 * 60 * 1000)); // 35 days ago
-            const recentDate = new Date(today.getTime() - (10 * 24 * 60 * 60 * 1000)); // 10 days ago
-            
-            members = [
-                {
-                    id: 'GYM001',
-                    name: 'Ahmad Hassan',
-                    phone: '03001234567',
-                    cnic: '12345-1234567-1',
-                    feeStartDate: recentDate.toISOString().split('T')[0],
-                    pricePaid: 5000
-                },
-                {
-                    id: 'GYM002',
-                    name: 'Fatima Khan',
-                    phone: '03119876543',
-                    cnic: '54321-7654321-2',
-                    feeStartDate: pastDate.toISOString().split('T')[0],
-                    pricePaid: 6000
-                }
-            ];
+      function loadSampleData() {
+    const today = new Date();
+    const pastDate = new Date(today.getTime() - (35 * 24 * 60 * 60 * 1000)); // 35 days ago
+    const recentDate = new Date(today.getTime() - (10 * 24 * 60 * 60 * 1000)); // 10 days ago
+
+    members = [
+        {
+            id: 'GYM001',
+            name: 'Ahmad Hassan',
+            phone: '03001234567',
+            cnic: '12345-1234567-1',
+            feeStartDate: recentDate.toISOString().split('T')[0],
+            pricePaid: 5000
+        },
+        {
+            id: 'GYM002',
+            name: 'Fatima Khan',
+            phone: '03119876543',
+            cnic: '54321-7654321-2',
+            feeStartDate: pastDate.toISOString().split('T')[0],
+            pricePaid: 6000
+        },
+        {
+            id: 'GYM003',
+            name: 'Muhammad Usman',
+            phone: '03011234567',
+            cnic: '37401-1111111-1',
+            feeStartDate: '2025-07-28',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM004',
+            name: 'Farhan Javed',
+            phone: '03021234567',
+            cnic: '37402-2222222-2',
+            feeStartDate: '2025-08-01',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM005',
+            name: 'Nadia Rehman',
+            phone: '03031234567',
+            cnic: '37403-3333333-3',
+            feeStartDate: '2025-08-05',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM006',
+            name: 'Zainab Ahmed',
+            phone: '03041234567',
+            cnic: '37404-4444444-4',
+            feeStartDate: '2025-08-07',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM007',
+            name: 'Maria Hussain',
+            phone: '03051234567',
+            cnic: '37405-5555555-5',
+            feeStartDate: '2025-08-17',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM008',
+            name: 'Yasir Nawaz',
+            phone: '03061234567',
+            cnic: '37406-6666666-6',
+            feeStartDate: '2025-08-25',
+            pricePaid: 3500
+        },
+        {
+            id: 'GYM009',
+            name: 'Hira Saeed',
+            phone: '03071234567',
+            cnic: '37407-7777777-7',
+            feeStartDate: '2025-08-28',
+            pricePaid: 2500
+        },
+        {
+            id: 'GYM010',
+            name: 'Waseem Akram',
+            phone: '03081234567',
+            cnic: '37408-8888888-8',
+            feeStartDate: '2025-08-31',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM011',
+            name: 'Rashid Mehmood',
+            phone: '03091234567',
+            cnic: '37409-9999999-9',
+            feeStartDate: '2025-09-03',
+            pricePaid: 3500
+        },
+        {
+            id: 'GYM012',
+            name: 'Uzma Tariq',
+            phone: '03101234567',
+            cnic: '37410-1010101-1',
+            feeStartDate: '2025-09-25',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM013',
+            name: 'Kashif Bashir',
+            phone: '03111234567',
+            cnic: '37411-1112131-1',
+            feeStartDate: '2025-10-16',
+            pricePaid: 3500
         }
+    ];
+}
 
         /* ============================================
            DASHBOARD UPDATE & CALCULATIONS
