@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>GetFit Gym - Admin Dashboard</title>
+</head>
+
+<body class="font-sans text-gray-800 bg-gray-900">
+
+    <!-- Navbar -->
+    <nav class="bg-black text-white sticky top-0 z-50 shadow-xl border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
+            <div class="text-2xl font-bold text-yellow-500">GetFit Gym</div>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300 text-sm">Welcome, <span class="text-yellow-400 font-semibold">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition text-sm">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <section class="min-h-screen px-6 py-8 relative overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-yellow-500 rounded-full filter blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-yellow-600 rounded-full filter blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto">
+            <!-- Dashboard Header -->
+            <div class="mb-8 animate-fadeIn">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">Admin Dashboard</h1>
+                <p class="text-gray-400">Manage members, attendance, and fees efficiently</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 animate-slideUp">
+                <!-- Total Members -->
+                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl p-6 shadow-xl transform hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-black text-sm font-semibold opacity-80">Total Members</p>
+                            <p class="text-black text-3xl font-bold mt-2" id="total-members">0</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-black opacity-30" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 17v2H2v-2s0-4 7-4 7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.39 3.39 0 0 0-1.93.59 5 5 0 0 1 0 5.82A3.39 3.39 0 0 0 15 11a3.5 3.5 0 0 0 0-7z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Active Members -->
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-gray-700 transform hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-300 text-sm font-semibold">Active Members</p>
+                            <p class="text-white text-3xl font-bold mt-2" id="active-members">0</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-green-400 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Expired Members -->
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-gray-700 transform hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-300 text-sm font-semibold">Expired Members</p>
+                            <p class="text-white text-3xl font-bold mt-2" id="expired-members">0</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-400 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Today's Attendance -->
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-gray-700 transform hover:scale-105 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-300 text-sm font-semibold">Today's Attendance</p>
+                            <p class="text-white text-3xl font-bold mt-2" id="today-attendance">0</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-blue-400 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 animate-slideUp" style="animation-delay: 0.2s;">
+                <button onclick="showAddMemberModal()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-4 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <span>Add Member</span>
+                </button>
+
+                <button onclick="showAttendanceModal()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center justify-center space-x-2 border border-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <span>Mark Attendance</span>
+                </button>
+
+                <button onclick="showUpdateFeeModal()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center justify-center space-x-2 border border-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Update Fee</span>
+                </button>
+
+                <button onclick="showExpiredMembers()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center justify-center space-x-2 border border-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Expired Members</span>
+                </button>
+            </div>
+
+            <!-- Members Table -->
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-700 overflow-hidden animate-slideUp" style="animation-delay: 0.3s;">
+                <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">All Members</h2>
+                    <div class="relative">
+                        <input type="text" id="search-member" placeholder="Search by ID or Name..." class="pl-10 pr-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-900 bg-opacity-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Member ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Phone</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">CNIC</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Fee Start</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Days Left</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-table-body" class="divide-y divide-gray-700">
+                            <!-- Members will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Member Modal -->
+    <div id="add-member-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700 animate-modalSlide">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-white">Add New Member</h3>
+                <button onclick="closeAddMemberModal()" class="text-gray-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="add-member-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Member ID</label>
+                    <input type="text" id="member-id" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., GYM001">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Full Name</label>
+                    <input type="text" id="member-name" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter full name">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Phone Number</label>
+                    <input type="tel" id="member-phone" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., 03001234567">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">CNIC</label>
+                    <input type="text" id="member-cnic" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., 12345-1234567-1">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Fee Start Date</label>
+                    <input type="date" id="fee-start-date" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Amount Paid (PKR)</label>
+                    <input type="number" id="price-paid" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., 5000">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    Add Member
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mark Attendance Modal -->
+    <div id="attendance-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700 animate-modalSlide">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-white">Mark Attendance</h3>
+                <button onclick="closeAttendanceModal()" class="text-gray-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="attendance-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Enter Member ID</label>
+                    <input type="text" id="attendance-member-id" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., GYM001">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    Check Member
+                </button>
+            </form>
+            <!-- Member Info Display -->
+            <div id="member-info-display" class="hidden p-6 border-t border-gray-700 space-y-3">
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <p class="text-gray-400 text-sm">Member Name</p>
+                    <p class="text-white text-lg font-semibold" id="display-member-name">-</p>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <p class="text-gray-400 text-sm">Member ID</p>
+                    <p class="text-white text-lg font-semibold" id="display-member-id">-</p>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <p class="text-gray-400 text-sm">Days Left</p>
+                    <p class="text-white text-lg font-semibold" id="display-days-left">-</p>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <p class="text-gray-400 text-sm">Status</p>
+                    <p class="text-lg font-semibold" id="display-status">-</p>
+                </div>
+                <button onclick="markAttendance()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    Mark Attendance
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Fee Modal -->
+    <div id="update-fee-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700 animate-modalSlide">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-white">Update Member Fee</h3>
+                <button onclick="closeUpdateFeeModal()" class="text-gray-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="update-fee-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Enter Member ID</label>
+                    <input type="text" id="update-fee-member-id" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., GYM001">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">New Fee Start Date</label>
+                    <input type="date" id="new-fee-start-date" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Amount Paid (PKR)</label>
+                    <input type="number" id="new-price-paid" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="e.g., 5000">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 rounded-lg shadow-lg transition transform hover:scale-105">
+                    Update Fee
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Styles -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fadeIn { animation: fadeIn 0.8s ease-out forwards; }
+        .animate-slideUp { animation: slideUp 0.6s ease-out forwards; }
+        .animate-modalSlide { animation: modalSlide 0.3s ease-out forwards; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        /* ============================================
+           DATA STRUCTURE & STORAGE
+           Note: This uses in-memory storage. For backend integration,
+           replace these with API calls to your database.
+        ============================================ */
+        
+        // Members array - This will hold all member data
+        // Structure: { id, name, phone, cnic, feeStartDate, pricePaid, daysLeft, status }
+        let members = [];
+        
+        // Attendance array - Track daily attendance
+        // Structure: { memberId, date, timestamp }
+        let attendanceRecords = [];
+        
+        // Current member being processed in attendance modal
+        let currentAttendanceMember = null;
+
+        /* ============================================
+           INITIALIZATION & PAGE LOAD
+        ============================================ */
+        
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default for date inputs
+            setTodayAsDefault();
+            
+            // Load sample data for demonstration (remove in production)
+            loadSampleData();
+            
+            // Update dashboard stats and table
+            updateDashboard();
+            
+            // Set up search functionality
+            setupSearch();
+        });
+
+        // Set today's date as default for all date inputs
+        function setTodayAsDefault() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fee-start-date').value = today;
+            document.getElementById('new-fee-start-date').value = today;
+        }
+
+        /* ============================================
+           SAMPLE DATA (FOR DEMONSTRATION)
+           Remove this in production and load from database
+        ============================================ */
+        
+      function loadSampleData() {
+    const today = new Date();
+    const pastDate = new Date(today.getTime() - (35 * 24 * 60 * 60 * 1000)); // 35 days ago
+    const recentDate = new Date(today.getTime() - (10 * 24 * 60 * 60 * 1000)); // 10 days ago
+
+    members = [
+        {
+            id: 'GYM001',
+            name: 'Ahmad Hassan',
+            phone: '03001234567',
+            cnic: '12345-1234567-1',
+            feeStartDate: recentDate.toISOString().split('T')[0],
+            pricePaid: 5000
+        },
+        {
+            id: 'GYM002',
+            name: 'Fatima Khan',
+            phone: '03119876543',
+            cnic: '54321-7654321-2',
+            feeStartDate: pastDate.toISOString().split('T')[0],
+            pricePaid: 6000
+        },
+        {
+            id: 'GYM003',
+            name: 'Muhammad Usman',
+            phone: '03011234567',
+            cnic: '37401-1111111-1',
+            feeStartDate: '2025-07-28',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM004',
+            name: 'Farhan Javed',
+            phone: '03021234567',
+            cnic: '37402-2222222-2',
+            feeStartDate: '2025-08-01',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM005',
+            name: 'Nadia Rehman',
+            phone: '03031234567',
+            cnic: '37403-3333333-3',
+            feeStartDate: '2025-08-05',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM006',
+            name: 'Zainab Ahmed',
+            phone: '03041234567',
+            cnic: '37404-4444444-4',
+            feeStartDate: '2025-08-07',
+            pricePaid: 2000
+        },
+        {
+            id: 'GYM007',
+            name: 'Maria Hussain',
+            phone: '03051234567',
+            cnic: '37405-5555555-5',
+            feeStartDate: '2025-08-17',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM008',
+            name: 'Yasir Nawaz',
+            phone: '03061234567',
+            cnic: '37406-6666666-6',
+            feeStartDate: '2025-08-25',
+            pricePaid: 3500
+        },
+        {
+            id: 'GYM009',
+            name: 'Hira Saeed',
+            phone: '03071234567',
+            cnic: '37407-7777777-7',
+            feeStartDate: '2025-08-28',
+            pricePaid: 2500
+        },
+        {
+            id: 'GYM010',
+            name: 'Waseem Akram',
+            phone: '03081234567',
+            cnic: '37408-8888888-8',
+            feeStartDate: '2025-08-31',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM011',
+            name: 'Rashid Mehmood',
+            phone: '03091234567',
+            cnic: '37409-9999999-9',
+            feeStartDate: '2025-09-03',
+            pricePaid: 3500
+        },
+        {
+            id: 'GYM012',
+            name: 'Uzma Tariq',
+            phone: '03101234567',
+            cnic: '37410-1010101-1',
+            feeStartDate: '2025-09-25',
+            pricePaid: 3000
+        },
+        {
+            id: 'GYM013',
+            name: 'Kashif Bashir',
+            phone: '03111234567',
+            cnic: '37411-1112131-1',
+            feeStartDate: '2025-10-16',
+            pricePaid: 3500
+        }
+    ];
+}
+
+        /* ============================================
+           DASHBOARD UPDATE & CALCULATIONS
+        ============================================ */
+        
+        // Main function to update all dashboard elements
+        function updateDashboard() {
+            calculateMemberStatuses();
+            updateStats();
+            renderMembersTable();
+        }
+
+        // Calculate days left and status for all members
+        function calculateMemberStatuses() {
+            const today = new Date();
+            
+            members.forEach(member => {
+                const feeStartDate = new Date(member.feeStartDate);
+                const expiryDate = new Date(feeStartDate.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days from fee start
+                
+                // Calculate difference in days
+                const timeDiff = expiryDate - today;
+                const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                
+                // Update member object
+                member.daysLeft = daysLeft;
+                member.status = daysLeft > 0 ? 'Active' : 'Expired';
+            });
+        }
+
+        // Update statistics cards
+        function updateStats() {
+            const totalMembers = members.length;
+            const activeMembers = members.filter(m => m.status === 'Active').length;
+            const expiredMembers = members.filter(m => m.status === 'Expired').length;
+            
+            // Get today's attendance count
+            const today = new Date().toISOString().split('T')[0];
+            const todayAttendance = attendanceRecords.filter(record => record.date === today).length;
+            
+            // Update DOM elements
+            document.getElementById('total-members').textContent = totalMembers;
+            document.getElementById('active-members').textContent = activeMembers;
+            document.getElementById('expired-members').textContent = expiredMembers;
+            document.getElementById('today-attendance').textContent = todayAttendance;
+        }
+
+        /* ============================================
+           MEMBERS TABLE RENDERING
+        ============================================ */
+        
+        function renderMembersTable(filteredMembers = null) {
+            const tbody = document.getElementById('members-table-body');
+            const membersToRender = filteredMembers || members;
+            
+            // Clear existing rows
+            tbody.innerHTML = '';
+            
+            if (membersToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="px-6 py-8 text-center text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <p class="text-lg font-semibold">No members found</p>
+                            <p class="text-sm mt-2">Add your first member to get started</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Render each member row
+            membersToRender.forEach(member => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-700 transition';
+                
+                // Status badge styling
+                const statusClass = member.status === 'Active' 
+                    ? 'bg-green-500 bg-opacity-20 text-green-400' 
+                    : 'bg-red-500 bg-opacity-20 text-red-400';
+                
+                // Days left styling with color coding
+                let daysLeftClass = 'text-white';
+                if (member.daysLeft <= 0) {
+                    daysLeftClass = 'text-red-400 font-bold';
+                } else if (member.daysLeft <= 7) {
+                    daysLeftClass = 'text-yellow-400 font-semibold';
+                } else {
+                    daysLeftClass = 'text-green-400';
+                }
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 text-sm font-semibold text-yellow-400">${member.id}</td>
+                    <td class="px-6 py-4 text-sm text-white font-medium">${member.name}</td>
+                    <td class="px-6 py-4 text-sm text-gray-300">${member.phone}</td>
+                    <td class="px-6 py-4 text-sm text-gray-300">${member.cnic}</td>
+                    <td class="px-6 py-4 text-sm text-gray-300">${formatDate(member.feeStartDate)}</td>
+                    <td class="px-6 py-4 text-sm ${daysLeftClass}">${member.daysLeft} days</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full ${statusClass}">
+                            ${member.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button onclick="deleteMember('${member.id}')" class="text-red-400 hover:text-red-300 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        /* ============================================
+           SEARCH FUNCTIONALITY
+        ============================================ */
+        
+        function setupSearch() {
+            const searchInput = document.getElementById('search-member');
+            
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    renderMembersTable();
+                    return;
+                }
+                
+                // Filter members by ID or name
+                const filtered = members.filter(member => 
+                    member.id.toLowerCase().includes(searchTerm) || 
+                    member.name.toLowerCase().includes(searchTerm)
+                );
+                
+                renderMembersTable(filtered);
+            });
+        }
+
+        /* ============================================
+           ADD MEMBER FUNCTIONALITY
+        ============================================ */
+        
+        function showAddMemberModal() {
+            document.getElementById('add-member-modal').classList.remove('hidden');
+            document.getElementById('add-member-form').reset();
+            setTodayAsDefault();
+        }
+
+        function closeAddMemberModal() {
+            document.getElementById('add-member-modal').classList.add('hidden');
+        }
+
+        // Handle add member form submission
+        document.getElementById('add-member-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const newMember = {
+                id: document.getElementById('member-id').value.trim().toUpperCase(),
+                name: document.getElementById('member-name').value.trim(),
+                phone: document.getElementById('member-phone').value.trim(),
+                cnic: document.getElementById('member-cnic').value.trim(),
+                feeStartDate: document.getElementById('fee-start-date').value,
+                pricePaid: parseInt(document.getElementById('price-paid').value)
+            };
+            
+            // Validation: Check if member ID already exists
+            if (members.find(m => m.id === newMember.id)) {
+                alert('❌ Member ID already exists! Please use a unique ID.');
+                return;
+            }
+            
+            // Validation: Phone number format
+            if (!/^03\d{9}$/.test(newMember.phone.replace(/-/g, ''))) {
+                alert('❌ Please enter a valid Pakistani phone number (03XXXXXXXXX)');
+                return;
+            }
+            
+            // Validation: CNIC format
+            if (!/^\d{5}-\d{7}-\d{1}$/.test(newMember.cnic)) {
+                alert('❌ Please enter CNIC in format: 12345-1234567-1');
+                return;
+            }
+            
+            // Add member to array
+            members.push(newMember);
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Close modal
+            closeAddMemberModal();
+            
+            // Show success message
+            showNotification('✅ Member added successfully!', 'success');
+            
+            /* BACKEND INTEGRATION POINT:
+               Replace above with API call:
+               
+               fetch('/api/members', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify(newMember)
+               })
+               .then(response => response.json())
+               .then(data => {
+                   members.push(data);
+                   updateDashboard();
+                   closeAddMemberModal();
+                   showNotification('✅ Member added successfully!', 'success');
+               })
+               .catch(error => {
+                   alert('❌ Error adding member: ' + error.message);
+               });
+            */
+        });
+
+        /* ============================================
+           ATTENDANCE FUNCTIONALITY
+        ============================================ */
+        
+        function showAttendanceModal() {
+            document.getElementById('attendance-modal').classList.remove('hidden');
+            document.getElementById('attendance-form').reset();
+            document.getElementById('member-info-display').classList.add('hidden');
+            currentAttendanceMember = null;
+        }
+
+        function closeAttendanceModal() {
+            document.getElementById('attendance-modal').classList.add('hidden');
+        }
+
+        // Handle attendance form submission
+        document.getElementById('attendance-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const memberId = document.getElementById('attendance-member-id').value.trim().toUpperCase();
+            
+            // Find member
+            const member = members.find(m => m.id === memberId);
+            
+            if (!member) {
+                alert('❌ Member not found! Please check the Member ID.');
+                return;
+            }
+            
+            // Store current member
+            currentAttendanceMember = member;
+            
+            // Display member information
+            document.getElementById('display-member-name').textContent = member.name;
+            document.getElementById('display-member-id').textContent = member.id;
+            document.getElementById('display-days-left').textContent = member.daysLeft + ' days';
+            
+            
+            const statusElement = document.getElementById('display-status');
+            statusElement.textContent = member.status;
+            statusElement.className = member.status === 'Active' ? 'text-lg font-semibold text-green-400' : 'text-lg font-semibold text-red-400';
+            
+            // Show member info display
+            document.getElementById('member-info-display').classList.remove('hidden');
+            
+            /* BACKEND INTEGRATION POINT:
+               Replace above with API call to fetch member details:
+               
+               fetch(`/api/members/${memberId}`)
+               .then(response => response.json())
+               .then(member => {
+                   // Display member info
+               })
+               .catch(error => {
+                   alert('❌ Member not found!');
+               });
+            */
+        });
+
+        // Mark attendance for the current member
+        function markAttendance() {
+            if (!currentAttendanceMember) {
+                alert('❌ No member selected!');
+                return;
+            }
+            
+            // Check if member is expired
+            if (currentAttendanceMember.status === 'Expired') {
+                const confirm = window.confirm('⚠️ This member\'s subscription has expired! Do you still want to mark attendance?');
+                if (!confirm) return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Check if attendance already marked today
+            const alreadyMarked = attendanceRecords.find(
+                record => record.memberId === currentAttendanceMember.id && record.date === today
+            );
+            
+            if (alreadyMarked) {
+                alert('ℹ️ Attendance already marked for this member today!');
+                return;
+            }
+            
+            // Add attendance record
+            attendanceRecords.push({
+                memberId: currentAttendanceMember.id,
+                date: today,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Update stats
+            updateStats();
+            
+            // Close modal
+            closeAttendanceModal();
+            
+            // Show success message
+            showNotification('✅ Attendance marked successfully!', 'success');
+            
+            /* BACKEND INTEGRATION POINT:
+               Replace above with API call:
+               
+               fetch('/api/attendance', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({
+                       memberId: currentAttendanceMember.id,
+                       date: today,
+                       timestamp: new Date().toISOString()
+                   })
+               })
+               .then(response => response.json())
+               .then(data => {
+                   updateStats();
+                   closeAttendanceModal();
+                   showNotification('✅ Attendance marked successfully!', 'success');
+               })
+               .catch(error => {
+                   alert('❌ Error marking attendance: ' + error.message);
+               });
+            */
+        }
+
+        /* ============================================
+           UPDATE FEE FUNCTIONALITY
+        ============================================ */
+        
+        function showUpdateFeeModal() {
+            document.getElementById('update-fee-modal').classList.remove('hidden');
+            document.getElementById('update-fee-form').reset();
+            setTodayAsDefault();
+        }
+
+        function closeUpdateFeeModal() {
+            document.getElementById('update-fee-modal').classList.add('hidden');
+        }
+
+        // Handle update fee form submission
+        document.getElementById('update-fee-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const memberId = document.getElementById('update-fee-member-id').value.trim().toUpperCase();
+            const newFeeStartDate = document.getElementById('new-fee-start-date').value;
+            const newPricePaid = parseInt(document.getElementById('new-price-paid').value);
+            
+            // Find member
+            const memberIndex = members.findIndex(m => m.id === memberId);
+            
+            if (memberIndex === -1) {
+                alert('❌ Member not found! Please check the Member ID.');
+                return;
+            }
+            
+            // Update member fee details
+            members[memberIndex].feeStartDate = newFeeStartDate;
+            members[memberIndex].pricePaid = newPricePaid;
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Close modal
+            closeUpdateFeeModal();
+            
+            // Show success message
+            showNotification('✅ Fee updated successfully!', 'success');
+            
+            /* BACKEND INTEGRATION POINT:
+               Replace above with API call:
+               
+               fetch(`/api/members/${memberId}/fee`, {
+                   method: 'PUT',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({
+                       feeStartDate: newFeeStartDate,
+                       pricePaid: newPricePaid
+                   })
+               })
+               .then(response => response.json())
+               .then(data => {
+                   updateDashboard();
+                   closeUpdateFeeModal();
+                   showNotification('✅ Fee updated successfully!', 'success');
+               })
+               .catch(error => {
+                   alert('❌ Error updating fee: ' + error.message);
+               });
+            */
+        });
+
+        /* ============================================
+           EXPIRED MEMBERS VIEW
+        ============================================ */
+        
+        function showExpiredMembers() {
+            const expiredMembers = members.filter(m => m.status === 'Expired');
+            
+            if (expiredMembers.length === 0) {
+                showNotification('ℹ️ No expired members found!', 'info');
+                return;
+            }
+            
+            // Scroll to table
+            document.getElementById('members-table-body').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Render only expired members
+            renderMembersTable(expiredMembers);
+            
+            // Update search input to show filtered state
+            document.getElementById('search-member').value = '';
+            document.getElementById('search-member').placeholder = 'Showing expired members only...';
+            
+            // Reset after 5 seconds
+            setTimeout(() => {
+                document.getElementById('search-member').placeholder = 'Search by ID or Name...';
+                renderMembersTable();
+            }, 5000);
+        }
+
+        /* ============================================
+           DELETE MEMBER FUNCTIONALITY
+        ============================================ */
+        
+        function deleteMember(memberId) {
+            const confirm = window.confirm(`⚠️ Are you sure you want to delete member ${memberId}? This action cannot be undone.`);
+            
+            if (!confirm) return;
+            
+            // Remove member from array
+            const index = members.findIndex(m => m.id === memberId);
+            if (index !== -1) {
+                members.splice(index, 1);
+                
+                // Update dashboard
+                updateDashboard();
+                
+                // Show success message
+                showNotification('✅ Member deleted successfully!', 'success');
+            }
+            
+            /* BACKEND INTEGRATION POINT:
+               Replace above with API call:
+               
+               fetch(`/api/members/${memberId}`, {
+                   method: 'DELETE'
+               })
+               .then(response => response.json())
+               .then(data => {
+                   const index = members.findIndex(m => m.id === memberId);
+                   members.splice(index, 1);
+                   updateDashboard();
+                   showNotification('✅ Member deleted successfully!', 'success');
+               })
+               .catch(error => {
+                   alert('❌ Error deleting member: ' + error.message);
+               });
+            */
+        }
+
+        /* ============================================
+           UTILITY FUNCTIONS
+        ============================================ */
+        
+        // Format date to readable format
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Show notification toast
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-6 z-50 px-6 py-4 rounded-lg shadow-2xl transform transition-all duration-300 ${
+                type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+            } text-white font-semibold`;
+            notification.style.transform = 'translateX(400px)';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Slide in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Slide out and remove
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Logout function
+        function logout() {
+            const confirm = window.confirm('Are you sure you want to logout?');
+            if (confirm) {
+                window.location.href = 'adminPortal.html';
+            }
+        }
+
+        // Close modals on outside click
+        document.getElementById('add-member-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeAddMemberModal();
+        });
+
+        document.getElementById('attendance-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeAttendanceModal();
+        });
+
+        document.getElementById('update-fee-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeUpdateFeeModal();
+        });
+
+        /* ============================================
+           BACKEND INTEGRATION NOTES
+           
+           To integrate with a backend (Node.js/Express, PHP, Python, etc.):
+           
+           1. MEMBER MANAGEMENT:
+              - GET /api/members - Fetch all members
+              - POST /api/members - Add new member
+              - PUT /api/members/:id - Update member
+              - DELETE /api/members/:id - Delete member
+              - PUT /api/members/:id/fee - Update member fee
+           
+           2. ATTENDANCE MANAGEMENT:
+              - GET /api/attendance - Fetch all attendance records
+              - POST /api/attendance - Mark attendance
+              - GET /api/attendance/today - Get today's attendance count
+           
+           3. STATISTICS:
+              - GET /api/stats - Fetch dashboard statistics
+           
+           4. DATABASE SCHEMA SUGGESTIONS:
+           
+           Members Table:
+           - id (VARCHAR, PRIMARY KEY)
+           - name (VARCHAR)
+           - phone (VARCHAR)
+           - cnic (VARCHAR)
+           - fee_start_date (DATE)
+           - price_paid (INTEGER)
+           - created_at (TIMESTAMP)
+           - updated_at (TIMESTAMP)
+           
+           Attendance Table:
+           - id (INTEGER, PRIMARY KEY, AUTO_INCREMENT)
+           - member_id (VARCHAR, FOREIGN KEY)
+           - date (DATE)
+           - timestamp (TIMESTAMP)
+           
+           5. SECURITY CONSIDERATIONS:
+              - Implement proper authentication/authorization
+              - Validate all inputs on server-side
+              - Use prepared statements to prevent SQL injection
+              - Hash sensitive data
+              - Implement rate limiting
+              - Use HTTPS in production
+           
+           6. RECOMMENDED STACK:
+              - Frontend: This HTML/JavaScript/Tailwind
+              - Backend: Node.js + Express.js
+              - Database: PostgreSQL or MySQL
+              - ORM: Sequelize or Prisma
+        ============================================ */
+    </script>
+
+</body>
+
+</html>

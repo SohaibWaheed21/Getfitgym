@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>GetFit Gym - Premium Supplements</title>
+</head>
+
+<body class="font-sans text-gray-800 bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="text-2xl font-bold">GetFit Gym</div>
+
+            <!-- Desktop Menu and Cart -->
+            <div class="hidden md:flex items-center space-x-8">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="hover:text-yellow-400 transition">Home</a></li>
+                    <li><a href="trainer.html" class="hover:text-yellow-400 transition">Trainers</a></li>
+                    <li><a href="supplements.html" class="hover:text-yellow-400 transition">Supplements</a></li>
+                    <li><a href="pricing.html" class="hover:text-yellow-400 transition">Pricing</a></li>
+                    <li>
+                    <a href="adminPortal.html" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Login</span>
+                    </a>
+                </li>
+                </ul>
+                
+                <!-- Cart Icon -->
+                <button id="cart-btn" class="relative hover:text-yellow-400 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button and Cart -->
+            <div class="md:hidden flex items-center space-x-4">
+                <button id="cart-btn-mobile" class="relative hover:text-yellow-400 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+                
+                <button id="menu-btn" class="focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden absolute top-16 left-0 right-0 bg-gray-800">
+                <ul class="flex flex-col space-y-2 px-6 py-4">
+                    <li><a href="index.html" class="block hover:text-yellow-400">Home</a></li>
+                    <li><a href="trainer.html" class="block hover:text-yellow-400">Trainers</a></li>
+                    <li><a href="supplements.html" class="block hover:text-yellow-400">Supplements</a></li>
+                    <li><a href="pricing.html" class="hover:text-yellow-400 transition">Pricing</a></li>
+                   <li>
+                        <a href="adminPortal.html" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Sidebar -->
+   <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+    <div class="p-6 bg-gray-900 text-white flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Shopping Cart</h2>
+        <button id="close-cart" class="text-white hover:text-yellow-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+    
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6"></div>
+    
+    <div class="p-6 bg-gray-50 border-t">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-lg font-semibold">Total:</span>
+            <span id="cart-total" class="text-2xl font-bold text-gray-900">PKR 0</span>
+        </div>
+        <button id="checkout-btn" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-3 rounded-xl font-semibold shadow-lg transition mb-3">
+            Place Order
+        </button>
+        <!-- WhatsApp Order Button (set your phone in data-phone) -->
+        <a 
+            id="whatsapp-order-btn"
+            data-phone="923214647895"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full flex justify-center items-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-xl font-semibold shadow-lg transition text-center"
+        >
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.031-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.611-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.572-.01-.199 0-.521.074-.793.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.214 3.074.149.198 2.098 3.202 5.077 4.309.711.244 1.264.39 1.697.499.713.182 1.362.156 1.874.095.572-.067 1.758-.719 2.006-1.414.248-.695.248-1.29.173-1.414-.075-.124-.272-.198-.57-.347zm-5.421 7.617h-.001a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.275c.001-5.455 4.436-9.89 9.892-9.89 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.896 6.992c-.003 5.455-4.437 9.89-9.892 9.89zm8.413-18.304A11.815 11.815 0 0012.05.002C5.495.002.002 5.495.002 12.049c0 2.124.557 4.199 1.613 6.036L.059 23.948a1.027 1.027 0 001.287 1.288l5.987-1.572A11.888 11.888 0 0012.049 24C18.605 24 24 18.506 24 12.049a11.82 11.82 0 00-3.515-8.656z"/>
+            </svg>
+            Order on WhatsApp
+        </a>
+    </div>
+</div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 bg-gray-900 text-white rounded-t-2xl">
+                <h2 class="text-2xl font-bold">Order Confirmation</h2>
+            </div>
+            
+            <form id="checkout-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                    <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none" placeholder="John Doe">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                    <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none" placeholder="john@example.com">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Phone Number</label>
+                    <input type="tel" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none" placeholder="+92 300 1234567">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Delivery Address</label>
+                    <textarea required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none" rows="3" placeholder="House #, Street, Area, City"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Payment Method</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none">
+                        <option>Cash on Delivery</option>
+                        <option>Bank Transfer</option>
+                        <option>JazzCash/EasyPaisa</option>
+                    </select>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-bold mb-2">Order Summary</h3>
+                    <div id="order-summary" class="space-y-1 text-sm text-gray-600"></div>
+                    <div class="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
+                        <span class="font-bold">Total:</span>
+                        <span id="modal-total" class="text-xl font-bold text-gray-900">PKR 0</span>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 pt-4">
+                    <button type="button" id="cancel-checkout" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl font-semibold hover:bg-gray-300 transition">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-3 rounded-xl font-semibold shadow-lg transition">
+                        Confirm Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20">
+        <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+        <div class="relative z-10 max-w-6xl mx-auto text-center px-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 animate-fadeUp">
+                Premium Supplements
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto animate-fadeUp delay-200">
+                Fuel your fitness journey with our carefully selected, high-quality supplements designed to maximize your results
+            </p>
+        </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-700 font-medium">Filter by:</span>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none">
+                        <option>All Categories</option>
+                        <option>Protein</option>
+                        <option>Pre-Workout</option>
+                        <option>Post-Workout</option>
+                        <option>Vitamins</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <span>Showing 2 products</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="max-w-6xl mx-auto py-16 px-6">
+        <div class="grid md:grid-cols-2 gap-12">
+
+            <!-- Product 1: Whey Protein -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-2xl">
+  <!-- Product Image Upload & Preview Section -->
+  <div class="relative h-80 bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+    <!-- Image preview or placeholder SVG -->
+    <div class="w-full h-full absolute inset-0 flex items-center justify-center">
+      <img id="product-image-preview"
+           src="Source-img/protien.jpg"
+           alt="Premium Whey"
+           class="w-full h-full object-cover rounded-none"
+           style="display: block;">
+      <!-- Placeholder SVG if no image -->
+      <svg id="product-placeholder-svg" xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 mx-auto mb-4 absolute" fill="currentColor" viewBox="0 0 24 24" style="display:none;">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+      </svg>
+    </div>
+    <!-- Badge -->
+    <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+      Best Seller
+    </div>
+    <!-- Image Upload Button -->
+    
+  </div>
+  <!-- Product Info -->
+  <div class="p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-3">Gold Standard Whey Protein</h2>
+    <p class="text-gray-600 mb-6 leading-relaxed">
+      Premium quality whey protein isolate with 25g of protein per serving. Perfect for muscle building, recovery, and maintaining lean muscle mass. Available in delicious vanilla and chocolate flavors.
+    </p>
+    <!-- Features -->
+    <div class="mb-6">
+      <h4 class="font-semibold text-gray-800 mb-3">Key Benefits:</h4>
+      <ul class="space-y-2">
+        <li class="flex items-center text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          25g High-Quality Protein per serving
+        </li>
+        <li class="flex items-center text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Fast absorption for quick recovery
+        </li>
+        <li class="flex items-center text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Low in carbs and fats
+        </li>
+        <li class="flex items-center text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Third-party tested for purity
+        </li>
+      </ul>
+    </div>
+    <!-- Quantity Selector -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-semibold mb-2">Quantity</label>
+      <div class="flex items-center space-x-3">
+        <button class="qty-minus bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold transition">-</button>
+        <input type="number" class="qty-input w-20 text-center border border-gray-300 rounded-lg py-2 font-semibold" value="1" min="1">
+        <button class="qty-plus bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold transition">+</button>
+      </div>
+    </div>
+    <!-- Price and CTA -->
+    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+      <div>
+        <span class="text-3xl font-bold text-gray-800">PKR 8,500</span>
+        <span class="text-lg text-gray-500 line-through ml-2">PKR 10,000</span>
+        <div class="text-sm text-green-600 font-semibold">Save 15%</div>
+      </div>
+      <button class="add-to-cart bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105" 
+    data-name="Gold Standard Whey Protein" 
+    data-price="8500" 
+    data-image="protien.jpg">
+    Add to Cart
+</button>
+    </div>
+    <!-- Size/Specs -->
+    <div class="mt-4 flex flex-wrap space-x-4">
+      <span class="text-sm text-gray-600">Size: 2.5kg (80 servings)</span>
+      <span class="text-sm text-gray-600">Length: 25cm</span>
+      <span class="text-sm text-gray-600">Width: 15cm</span>
+      <span class="text-sm text-gray-600">Height: 35cm</span>
+    </div>
+  </div>
+</div>
+            <!-- Product 2: Pre-Workout -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-2xl">
+                <div class="relative h-80  bg-gradient-to-br bg-[#FBFBFB] flex items-center justify-center">
+                    <div class="relative h-80 bg-gradient-to-br bg-[#FBFBFB] flex items-center justify-center">
+      <img id="product-image-preview"
+           src="Source-img/preworkout.jpg"
+           alt="Premium Whey"
+           class="w-full h-full object-cover rounded-none"
+           style="display: block;">
+      <!-- Placeholder SVG if no image -->
+      
+    </div>
+                    <div class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">New</div>
+                </div>
+
+                <div class="p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">Ultimate Pre-Workout Formula</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Advanced pre-workout supplement designed to maximize your training intensity. Contains caffeine, beta-alanine, and citrulline malate.
+                    </p>
+
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-800 mb-3">Key Benefits:</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                300mg Caffeine for explosive energy
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                Beta-Alanine for muscular endurance
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                Enhanced focus and mental clarity
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Quantity Selector -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-semibold mb-2">Quantity</label>
+                        <div class="flex items-center space-x-3">
+                            <button class="qty-minus bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold transition">-</button>
+                            <input type="number" class="qty-input w-20 text-center border border-gray-300 rounded-lg py-2 font-semibold" value="1" min="1">
+                            <button class="qty-plus bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-lg font-bold transition">+</button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                        <div>
+                            <span class="text-3xl font-bold text-gray-800">PKR 6,500</span>
+                            <span class="text-lg text-gray-500 line-through ml-2">PKR 7,500</span>
+                            <div class="text-sm text-green-600 font-semibold">Save 13%</div>
+                        </div>
+                        <button class="add-to-cart bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105"
+    data-name="Preworkout"
+    data-price="4500"
+    data-image="preworkout.jpg">
+    Add to Cart
+</button>
+                    </div>
+
+                    <div class="mt-4">
+                        <span class="text-sm text-gray-600">Size: 600g (30 servings)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Our Supplements -->
+    <section class="bg-gradient-to-br from-gray-900 to-black py-20">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-12">Why Choose GetFit Supplements?</h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-8 rounded-2xl transform hover:scale-105 transition duration-300">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.46,13.97L5.82,21L12,17.27Z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Premium Quality</h3>
+                    <p class="text-gray-300">All products are third-party tested for purity and potency. We source only the highest quality ingredients.</p>
+                </div>
+
+                <div class="bg-gray-800 p-8 rounded-2xl transform hover:scale-105 transition duration-300">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Expert Approved</h3>
+                    <p class="text-gray-300">Recommended by certified nutritionists and fitness professionals. Proven formulations for optimal results.</p>
+                </div>
+
+                <div class="bg-gray-800 p-8 rounded-2xl transform hover:scale-105 transition duration-300">
+                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19,7H22V9H19V12H17V9H14V7H17V4H19V7M17,12L15,10V11H5V9L3,11V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H17Z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Fast Delivery</h3>
+                    <p class="text-gray-300">Free delivery within Lahore. Fast and secure shipping to ensure your supplements arrive fresh.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-yellow-500 py-12">
+        <div class="max-w-4xl mx-auto text-center px-6">
+            <h2 class="text-3xl font-bold text-black mb-4">Ready to Fuel Your Fitness Journey?</h2>
+            <p class="text-lg text-gray-800 mb-8">Join thousands of satisfied customers who trust GetFit supplements for their fitness goals.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-black text-yellow-400 px-8 py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
+                    View All Products
+                </button>
+                <button class="bg-white text-black px-8 py-3 rounded-xl font-semibold border-2 border-black hover:bg-gray-100 transition">
+                    Contact Expert
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 text-gray-400 py-10">
+        <div class="max-w-6xl mx-auto px-6 grid gap-10 md:grid-cols-3 text-center md:text-left">
+
+            <!-- About -->
+            <div>
+                <h3 class="text-2xl font-bold text-yellow-500 mb-4">GetFit Gym</h3>
+                <p class="leading-relaxed">
+                    Building stronger bodies and sharper minds. <br>
+                    Join our community today!
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-2xl font-bold text-yellow-500 mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="hover:text-yellow-400 transition">Home</a></li>
+                    <li><a href="trainer.html" class="hover:text-yellow-400 transition">Trainers</a></li>
+                    <li><a href="supplements.html" class="hover:text-yellow-400 transition">Supplements</a></li>
+                    <li><a href="pricing.html" class="hover:text-yellow-400 transition">Pricing</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="text-2xl font-bold text-yellow-500 mb-4">Contact</h3>
+                <p>Email: <a href="mailto:getfitness01@gmail.com" class="hover:text-yellow-400 transition">getfitness01@gmail.com</a></p>
+                <p>Phone: <a href="tel:+923001234567" class="hover:text-yellow-400 transition">+92 300 1234567</a></p>
+                <p>Address: Lahore, Pakistan</p>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="text-center text-gray-500 mt-8 border-t border-gray-800 pt-4 text-sm">
+            &copy; 2025 <span class="text-yellow-500 font-semibold">GetFit Gym</span>. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Custom Styles -->
+    <style>
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeUp {
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes flyToCart {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.5) translateY(-50px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0.1) translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        .fly-to-cart {
+            animation: flyToCart 0.8s ease-in-out forwards;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .bounce-animation {
+            animation: bounce 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake-animation {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+    // Cart data
+    let cart = [];
+
+    // Elements
+    const cartBtn = document.getElementById('cart-btn');
+    const cartBtnMobile = document.getElementById('cart-btn-mobile');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const closeCart = document.getElementById('close-cart');
+    const cartCount = document.getElementById('cart-count');
+    const cartCountMobile = document.getElementById('cart-count-mobile');
+    const cartItems = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const checkoutForm = document.getElementById('checkout-form');
+    const cancelCheckout = document.getElementById('cancel-checkout');
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    // NEW: WhatsApp order button
+    const whatsappOrderBtn = document.getElementById('whatsapp-order-btn');
+
+    // Mobile menu toggle
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Open cart
+    function openCart() {
+        cartSidebar.classList.remove('translate-x-full');
+    }
+
+    // Close cart
+    function closeCartSidebar() {
+        cartSidebar.classList.add('translate-x-full');
+    }
+
+    cartBtn.addEventListener('click', openCart);
+    cartBtnMobile.addEventListener('click', openCart);
+    closeCart.addEventListener('click', closeCartSidebar);
+
+    // Update cart display
+    function updateCart() {
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotal.textContent = `PKR ${total.toLocaleString()}`;
+
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        cartCountMobile.textContent = totalItems;
+
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<div class="text-center py-12 text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg><p class="text-lg font-semibold">Your cart is empty</p></div>';
+            return;
+        }
+
+        cartItems.innerHTML = cart.map((item, index) => `
+            <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg mb-3">
+                <div class="w-20 h-20 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200">
+                    <img 
+                        src="Source-img/${item.image}" 
+                        alt="${item.name}" 
+                        class="w-full h-full object-contain rounded-lg"
+                        style="max-width: 100%; max-height: 100%;"
+                        onerror="this.onerror=null;this.src='Source-img/placeholder.jpg';"
+                    >
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">${item.name}</h3>
+                    <p class="text-sm text-gray-600">PKR ${item.price.toLocaleString()}</p>
+                    <div class="flex items-center gap-2 mt-2">
+                        <button onclick="changeQuantity(${index}, -1)" class="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">-</button>
+                        <span class="font-semibold">${item.quantity}</span>
+                        <button onclick="changeQuantity(${index}, 1)" class="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">+</button>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-gray-800">PKR ${(item.price * item.quantity).toLocaleString()}</p>
+                    <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm mt-2">Remove</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Change quantity
+    window.changeQuantity = function(index, delta) {
+        cart[index].quantity += delta;
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        updateCart();
+    };
+
+    // Remove from cart
+    window.removeFromCart = function(index) {
+        cart.splice(index, 1);
+        updateCart();
+    };
+
+    // Add to cart animation and logic
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const name = this.dataset.name;
+            const price = parseInt(this.dataset.price);
+            const image = this.dataset.image; // should be e.g. 'protien.jpg' or 'preworkout.jpg'
+            const qtyInput = this.closest('.p-8').querySelector('.qty-input');
+            const quantity = parseInt(qtyInput.value);
+
+            // Add to cart
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ name, price, image, quantity });
+            }
+
+            // Animation
+            const btnRect = this.getBoundingClientRect();
+            const cartRect = cartBtn.getBoundingClientRect();
+
+            const flyingItem = document.createElement('div');
+            flyingItem.className = 'fixed w-12 h-12 rounded-full flex items-center justify-center z-50 fly-to-cart';
+            flyingItem.style.left = btnRect.left + 'px';
+            flyingItem.style.top = btnRect.top + 'px';
+            flyingItem.style.background = '#fff';
+            flyingItem.style.border = "1px solid #eee";
+            flyingItem.innerHTML = `
+                <img 
+                    src="Source-img/${image}" 
+                    alt="${name}" 
+                    class="w-full h-full object-contain rounded-full"
+                    style="max-width: 100%; max-height: 100%;"
+                >
+            `;
+
+            const tx = cartRect.left - btnRect.left;
+            const ty = cartRect.top - btnRect.top;
+            flyingItem.style.setProperty('--tx', tx + 'px');
+            flyingItem.style.setProperty('--ty', ty + 'px');
+
+            document.body.appendChild(flyingItem);
+
+            // Bounce cart icon
+            cartBtn.classList.add('bounce-animation');
+            cartBtnMobile.classList.add('bounce-animation');
+
+            setTimeout(() => {
+                flyingItem.remove();
+                cartBtn.classList.remove('bounce-animation');
+                cartBtnMobile.classList.remove('bounce-animation');
+                cartBtn.classList.add('shake-animation');
+                cartBtnMobile.classList.add('shake-animation');
+                updateCart();
+
+                setTimeout(() => {
+                    cartBtn.classList.remove('shake-animation');
+                    cartBtnMobile.classList.remove('shake-animation');
+                }, 300);
+            }, 800);
+
+            // Reset quantity
+            qtyInput.value = 1;
+        });
+    });
+
+    // Quantity controls
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('.qty-input');
+            input.value = parseInt(input.value) + 1;
+        });
+    });
+
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('.qty-input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        });
+    });
+
+    // Checkout
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        const orderSummary = document.getElementById('order-summary');
+        const modalTotal = document.getElementById('modal-total');
+
+        orderSummary.innerHTML = cart.map(item => `
+            <div class="flex justify-between">
+                <span>${item.name} x ${item.quantity}</span>
+                <span>PKR ${(item.price * item.quantity).toLocaleString()}</span>
+            </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        modalTotal.textContent = `PKR ${total.toLocaleString()}`;
+
+        checkoutModal.classList.remove('hidden');
+        checkoutModal.classList.add('flex');
+        closeCartSidebar();
+    });
+
+    cancelCheckout.addEventListener('click', () => {
+        checkoutModal.classList.add('hidden');
+        checkoutModal.classList.remove('flex');
+    });
+
+    checkoutForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Order confirmed! Thank you for shopping with GetFit Gym. We will contact you shortly.');
+        cart = [];
+        updateCart();
+        checkoutModal.classList.add('hidden');
+        checkoutModal.classList.remove('flex');
+        checkoutForm.reset();
+    });
+
+    // Close modals on outside click
+    checkoutModal.addEventListener('click', (e) => {
+        if (e.target === checkoutModal) {
+            checkoutModal.classList.add('hidden');
+            checkoutModal.classList.remove('flex');
+        }
+    });
+
+    // NEW: WhatsApp order click handler
+    if (whatsappOrderBtn) {
+        whatsappOrderBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            const phone = (whatsappOrderBtn.dataset.phone || '').replace(/\D/g, '');
+            if (!phone) {
+                alert('WhatsApp number is not set. Please add a valid number in data-phone.');
+                return;
+            }
+
+            const lines = cart.map((item, idx) => {
+                const lineTotal = (item.price * item.quantity).toLocaleString();
+                return `${idx + 1}. ${item.name} x ${item.quantity} = PKR ${lineTotal}`;
+            });
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            const message = `Hello! I'd like to place an order:\n\n${lines.join('\n')}\n\nTotal: PKR ${total.toLocaleString()}`;
+
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        });
+    }
+</script>
+</body>
+
+</html>
