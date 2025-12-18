@@ -30,6 +30,8 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+test.env
 
 # vercel
 .vercel
@@ -38,9 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.env
-
+# Media and uploads (PayloadCMS)
 /media
+/public/media
 
 # Playwright
 node_modules/
@@ -48,3 +50,20 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/

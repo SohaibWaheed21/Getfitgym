@@ -69,6 +69,11 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    trainers: Trainer;
+    bookings: Booking;
+    supplements: Supplement;
+    members: Member;
+    attendance: Attendance;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +83,11 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    trainers: TrainersSelect<false> | TrainersSelect<true>;
+    bookings: BookingsSelect<false> | BookingsSelect<true>;
+    supplements: SupplementsSelect<false> | SupplementsSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
+    attendance: AttendanceSelect<false> | AttendanceSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -161,6 +171,148 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trainers".
+ */
+export interface Trainer {
+  id: string;
+  name: string;
+  title?: string | null;
+  bio?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  photo?: (string | null) | Media;
+  yearsExp?: number | null;
+  clients?: number | null;
+  rating?: number | null;
+  specialties?:
+    | {
+        specialty?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  achievements?:
+    | {
+        achievement?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings".
+ */
+export interface Booking {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string | null;
+  trainer?: (string | null) | Trainer;
+  goals?:
+    | {
+        goal?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
+  preferredTime?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "supplements".
+ */
+export interface Supplement {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number;
+  originalPrice?: number | null;
+  image?: (string | null) | Media;
+  badge?: string | null;
+  badgeColor?: ('red' | 'blue' | 'yellow' | 'green') | null;
+  category?: ('Protein' | 'Pre-Workout' | 'Post-Workout' | 'Vitamins') | null;
+  benefits?:
+    | {
+        benefit?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  specs?: string | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: string;
+  /**
+   * Unique Member ID (e.g., GYM001)
+   */
+  memberId: string;
+  name: string;
+  /**
+   * Format: 03XXXXXXXXX
+   */
+  phone: string;
+  /**
+   * Format: 12345-1234567-1
+   */
+  cnic: string;
+  feeStartDate: string;
+  /**
+   * Amount paid in PKR
+   */
+  pricePaid: number;
+  /**
+   * Auto-calculated based on fee date
+   */
+  status?: ('Active' | 'Expired') | null;
+  /**
+   * Auto-calculated days remaining
+   */
+  daysLeft?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Mark daily attendance for gym members
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance".
+ */
+export interface Attendance {
+  id: string;
+  member: string | Member;
+  date: string;
+  /**
+   * Attendance marked
+   */
+  checkmark?: boolean | null;
+  timestamp?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -190,6 +342,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'trainers';
+        value: string | Trainer;
+      } | null)
+    | ({
+        relationTo: 'bookings';
+        value: string | Booking;
+      } | null)
+    | ({
+        relationTo: 'supplements';
+        value: string | Supplement;
+      } | null)
+    | ({
+        relationTo: 'members';
+        value: string | Member;
+      } | null)
+    | ({
+        relationTo: 'attendance';
+        value: string | Attendance;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -272,6 +444,106 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trainers_select".
+ */
+export interface TrainersSelect<T extends boolean = true> {
+  name?: T;
+  title?: T;
+  bio?: T;
+  photo?: T;
+  yearsExp?: T;
+  clients?: T;
+  rating?: T;
+  specialties?:
+    | T
+    | {
+        specialty?: T;
+        id?: T;
+      };
+  achievements?:
+    | T
+    | {
+        achievement?: T;
+        id?: T;
+      };
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings_select".
+ */
+export interface BookingsSelect<T extends boolean = true> {
+  name?: T;
+  phone?: T;
+  email?: T;
+  trainer?: T;
+  goals?:
+    | T
+    | {
+        goal?: T;
+        id?: T;
+      };
+  notes?: T;
+  preferredTime?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "supplements_select".
+ */
+export interface SupplementsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  price?: T;
+  originalPrice?: T;
+  image?: T;
+  badge?: T;
+  badgeColor?: T;
+  category?: T;
+  benefits?:
+    | T
+    | {
+        benefit?: T;
+        id?: T;
+      };
+  specs?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  memberId?: T;
+  name?: T;
+  phone?: T;
+  cnic?: T;
+  feeStartDate?: T;
+  pricePaid?: T;
+  status?: T;
+  daysLeft?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance_select".
+ */
+export interface AttendanceSelect<T extends boolean = true> {
+  member?: T;
+  date?: T;
+  checkmark?: T;
+  timestamp?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
