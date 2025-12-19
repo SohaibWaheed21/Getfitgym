@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import Image from 'next/image'
 import { useCart } from '@/contexts/CartContext'
 
 export default function CartSidebar({
@@ -37,8 +38,19 @@ export default function CartSidebar({
       <div className="p-6 bg-gray-900 text-white flex justify-between items-center">
         <h2 className="text-2xl font-bold">Shopping Cart</h2>
         <button onClick={onClose} className="text-white hover:text-yellow-400">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -46,29 +58,62 @@ export default function CartSidebar({
       <div className="flex-1 overflow-y-auto p-6">
         {cart.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-16 h-16 mx-auto mb-4 text-gray-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
             <p className="text-lg font-semibold">Your cart is empty</p>
           </div>
         ) : (
           cart.map((item, index) => (
             <div key={index} className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg mb-3">
-              <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200">
-                <img src={`/images/${item.image}`} alt={item.name} className="w-full h-full object-contain rounded-lg" />
+              <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200 relative">
+                <Image
+                  src={`/images/${item.image}`}
+                  alt={item.name}
+                  fill
+                  className="object-contain rounded-lg"
+                />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
                 <p className="text-sm text-gray-600">PKR {item.price.toLocaleString()}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <button onClick={() => changeQuantity(index, -1)} className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">-</button>
+                  <button
+                    onClick={() => changeQuantity(index, -1)}
+                    className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold"
+                  >
+                    -
+                  </button>
                   <span className="font-semibold">{item.quantity}</span>
-                  <button onClick={() => changeQuantity(index, 1)} className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">+</button>
+                  <button
+                    onClick={() => changeQuantity(index, 1)}
+                    className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-gray-800">PKR {(item.price * item.quantity).toLocaleString()}</p>
-                <button onClick={() => removeFromCart(index)} className="text-red-500 hover:text-red-700 text-sm mt-2">Remove</button>
+                <p className="font-bold text-gray-800">
+                  PKR {(item.price * item.quantity).toLocaleString()}
+                </p>
+                <button
+                  onClick={() => removeFromCart(index)}
+                  className="text-red-500 hover:text-red-700 text-sm mt-2"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           ))
@@ -78,7 +123,9 @@ export default function CartSidebar({
       <div className="p-6 bg-gray-50 border-t">
         <div className="flex justify-between items-center mb-4">
           <span className="text-lg font-semibold">Total:</span>
-          <span className="text-2xl font-bold text-gray-900">PKR {totalAmount.toLocaleString()}</span>
+          <span className="text-2xl font-bold text-gray-900">
+            PKR {totalAmount.toLocaleString()}
+          </span>
         </div>
         <button
           onClick={onCheckout}

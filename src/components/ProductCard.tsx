@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import Image from 'next/image'
 import { useCart } from '@/contexts/CartContext'
 
 interface ProductCardProps {
@@ -14,14 +15,24 @@ interface ProductCardProps {
   specs?: string
 }
 
-export default function ProductCard({ id, name, price, originalPrice, image, badge, badgeColor, benefits, specs }: ProductCardProps) {
+export default function ProductCard({
+  id: _id,
+  name,
+  price,
+  originalPrice,
+  image,
+  badge,
+  badgeColor,
+  benefits,
+  specs,
+}: ProductCardProps) {
   const { addToCart } = useCart()
   const [quantity, setQuantity] = React.useState(1)
   const [animating, setAnimating] = React.useState(false)
 
   const handleAddToCart = () => {
     addToCart({ name, price, image }, quantity)
-    
+
     // Trigger bounce animation
     setAnimating(true)
     setTimeout(() => setAnimating(false), 600)
@@ -41,21 +52,34 @@ export default function ProductCard({ id, name, price, originalPrice, image, bad
     <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:scale-105 border border-gray-100">
       <div className="relative p-8 bg-gradient-to-br from-gray-50 to-gray-100 group-hover:from-yellow-50 group-hover:to-gray-50 transition-all duration-500">
         {badge && (
-          <span className={`absolute top-6 right-6 ${badgeColors[badgeColor as keyof typeof badgeColors] || 'bg-blue-500'} text-white text-sm font-extrabold px-4 py-2 rounded-full uppercase tracking-wider shadow-lg animate-pulse`}>
+          <span
+            className={`absolute top-6 right-6 ${badgeColors[badgeColor as keyof typeof badgeColors] || 'bg-blue-500'} text-white text-sm font-extrabold px-4 py-2 rounded-full uppercase tracking-wider shadow-lg animate-pulse`}
+          >
             {badge}
           </span>
         )}
-        <div className="w-full h-72 flex items-center justify-center">
-          <img src={image} alt={name} className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-500" />
+        <div className="w-full h-72 flex items-center justify-center relative">
+          <Image
+            src={image}
+            alt={name}
+            fill
+            className="object-contain transform group-hover:scale-110 transition-transform duration-500"
+          />
         </div>
       </div>
-      
+
       <div className="p-8 bg-gradient-to-b from-white to-gray-50">
-        <h3 className="text-2xl font-extrabold text-gray-900 mb-3 group-hover:text-yellow-600 transition-colors duration-300">{name}</h3>
+        <h3 className="text-2xl font-extrabold text-gray-900 mb-3 group-hover:text-yellow-600 transition-colors duration-300">
+          {name}
+        </h3>
         <div className="flex items-baseline gap-3 mb-6">
-          <span className="text-3xl font-black bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">PKR {price.toLocaleString()}</span>
+          <span className="text-3xl font-black bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">
+            PKR {price.toLocaleString()}
+          </span>
           {originalPrice && (
-            <span className="text-xl text-gray-400 line-through font-semibold">PKR {originalPrice.toLocaleString()}</span>
+            <span className="text-xl text-gray-400 line-through font-semibold">
+              PKR {originalPrice.toLocaleString()}
+            </span>
           )}
         </div>
 
