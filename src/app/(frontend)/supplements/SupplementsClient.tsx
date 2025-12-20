@@ -396,7 +396,7 @@ function SupplementsClientInner({
                 WHY CHOOSE <span className="bg-gradient-to-r from-[#F5C211] to-[#FF6B1A] bg-clip-text text-transparent">GETFIT?</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                We're committed to helping you achieve your fitness goals with premium supplements and exceptional service.
+                We&apos;re committed to helping you achieve your fitness goals with premium supplements and exceptional service.
               </p>
             </div>
 
