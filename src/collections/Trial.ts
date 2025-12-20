@@ -15,7 +15,7 @@ export const Trial: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
-      defaultValue: 'We\'re Not Like Others',
+      defaultValue: 'We&apos;re Not Like Others',
       admin: {
         description: 'Main heading for trial section',
       },
@@ -24,7 +24,7 @@ export const Trial: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       required: true,
-      defaultValue: 'At GetFit Gym, we don\'t believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!',
+      defaultValue: 'At GetFit Gym, we don&apos;t believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!',
       admin: {
         description: 'Description text',
       },

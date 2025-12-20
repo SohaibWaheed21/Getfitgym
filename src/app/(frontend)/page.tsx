@@ -246,10 +246,10 @@ export default function HomePage() {
         <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
           <div className="text-white space-y-6">
             <h2 className="text-4xl font-bold leading-tight">
-              {trialData?.title || "We're Not Like Others"}
+              {trialData?.title || "We&apos;re Not Like Others"}
             </h2>
             <p className="text-lg text-gray-300">
-              {trialData?.description || "At GetFit Gym, we don't believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!"}
+              {trialData?.description || "At GetFit Gym, we don&apos;t believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!"}
             </p>
             <ul className="space-y-2 text-lg">
               {trialData?.features && trialData.features.length > 0 ? (

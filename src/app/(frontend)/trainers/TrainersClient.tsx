@@ -620,7 +620,7 @@ export default function TrainersClient({
                   {isSubmitting ? 'Submitting...' : 'Book My Session 🔥'}
                 </button>
                 <p className="text-xs text-gray-500 mt-3 text-center">
-                  We'll contact you within 24 hours to confirm
+                  We&apos;ll contact you within 24 hours to confirm
                 </p>
               </div>
             </form>

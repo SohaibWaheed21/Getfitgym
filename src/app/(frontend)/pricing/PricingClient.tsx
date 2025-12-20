@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react'
+import Link from 'next/link'
 import NavBar from '@/components/NavBar'
 
 interface PageSettings {
@@ -213,10 +214,10 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
           <div>
             <h3 className="text-2xl font-bold text-yellow-500 mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="hover:text-yellow-400 transition">Home</a></li>
-              <li><a href="/trainers" className="hover:text-yellow-400 transition">Trainers</a></li>
-              <li><a href="/supplements" className="hover:text-yellow-400 transition">Supplements</a></li>
-              <li><a href="/pricing" className="hover:text-yellow-400 transition">Pricing</a></li>
+              <li><Link href="/" className="hover:text-yellow-400 transition">Home</Link></li>
+              <li><Link href="/trainers" className="hover:text-yellow-400 transition">Trainers</Link></li>
+              <li><Link href="/supplements" className="hover:text-yellow-400 transition">Supplements</Link></li>
+              <li><Link href="/pricing" className="hover:text-yellow-400 transition">Pricing</Link></li>
             </ul>
           </div>
 
