@@ -44,9 +44,7 @@ export const getTrainerImageUrl = (name: string): string => {
 }
 
 export const getSupplementImageUrl = (name: string): string => {
-  if (name.toLowerCase().includes('pre') || name.toLowerCase().includes('workout')) {
-    return CLOUDINARY_IMAGES.preworkout
-  }
-  // Add more supplement mappings as needed
-  return ''
+  // For now, return preworkout image as fallback for all supplements
+  // You can add specific mappings later
+  return CLOUDINARY_IMAGES.preworkout
 }
