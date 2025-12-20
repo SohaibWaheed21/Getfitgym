@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard'
 import CartSidebar from '@/components/CartSidebar'
 import CheckoutModal from '@/components/CheckoutModal'
 import { CartProvider, useCart } from '@/contexts/CartContext'
+import { getSupplementImageUrl } from '@/lib/cloudinary-urls'
 
 interface Supplement {
   id: string
@@ -181,9 +182,9 @@ function SupplementsClientInner({
               <div key={supplement.id} className="product-card bg-white rounded-3xl shadow-professional-xl overflow-hidden scroll-reveal">
                 {/* Product Image */}
                 <div className="relative w-full h-80 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden image-zoom rounded-t-2xl flex items-center justify-center p-8">
-                  {supplement.image?.url ? (
+                  {supplement.image?.url || getSupplementImageUrl(supplement.name) ? (
                     <img
-                      src={supplement.image.url}
+                      src={supplement.image?.url || getSupplementImageUrl(supplement.name)}
                       alt={supplement.name}
                       className="w-full h-full object-contain"
                     />
@@ -233,7 +234,8 @@ function SupplementsClientInner({
                     </div>
                     <button
                       onClick={() => {
-                        addToCart({ name: supplement.name, price: supplement.price, image: supplement.image.url }, 1)
+                        const imageUrl = supplement.image?.url || getSupplementImageUrl(supplement.name)
+                        addToCart({ name: supplement.name, price: supplement.price, image: imageUrl }, 1)
                         setCartOpen(true)
                       }}
                       className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold shadow-professional-lg transition transform hover:scale-105 btn-professional"

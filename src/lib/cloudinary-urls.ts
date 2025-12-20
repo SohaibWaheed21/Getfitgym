@@ -33,3 +33,20 @@ export function getCloudinaryUrl(publicId: string, transformations?: string) {
   
   return `${baseUrl}/${publicId}`
 }
+
+// Fallback image URLs for trainers and supplements when database images are not available
+export const getTrainerImageUrl = (name: string): string => {
+  if (name.toLowerCase().includes('wahab')) {
+    return CLOUDINARY_IMAGES.wahab
+  }
+  // Add more trainer mappings as needed
+  return ''
+}
+
+export const getSupplementImageUrl = (name: string): string => {
+  if (name.toLowerCase().includes('pre') || name.toLowerCase().includes('workout')) {
+    return CLOUDINARY_IMAGES.preworkout
+  }
+  // Add more supplement mappings as needed
+  return ''
+}

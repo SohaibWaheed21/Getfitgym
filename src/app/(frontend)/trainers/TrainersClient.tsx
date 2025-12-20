@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import NavBar from '@/components/NavBar'
+import { getTrainerImageUrl } from '@/lib/cloudinary-urls'
 
 interface Trainer {
   id: string
@@ -181,9 +182,9 @@ export default function TrainersClient({
               <div className="relative w-full md:w-2/5 h-[400px] md:h-auto overflow-hidden">
                 <div className="absolute inset-0 bg-yellow-500/10 mix-blend-overlay z-10"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-80 md:opacity-40"></div>
-                {featuredTrainer.photo?.url ? (
+                {featuredTrainer.photo?.url || getTrainerImageUrl(featuredTrainer.name) ? (
                   <Image
-                    src={featuredTrainer.photo.url}
+                    src={featuredTrainer.photo?.url || getTrainerImageUrl(featuredTrainer.name)}
                     alt={featuredTrainer.name}
                     fill
                     className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
