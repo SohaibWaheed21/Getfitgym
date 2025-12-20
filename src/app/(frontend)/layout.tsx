@@ -1,5 +1,6 @@
 import React from 'react'
 import './styles.css'
+import ClientLayout from './ClientLayout'
 
 export const metadata = {
   description: 'GetFit Gym website',
@@ -12,7 +13,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   )
