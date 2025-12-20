@@ -8,6 +8,7 @@ import CartSidebar from '@/components/CartSidebar'
 import CheckoutModal from '@/components/CheckoutModal'
 import { CartProvider, useCart } from '@/contexts/CartContext'
 import { getSupplementImageUrl } from '@/lib/cloudinary-urls'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 interface Supplement {
   id: string
@@ -38,7 +39,7 @@ function SupplementsClientInner({
   supplements: Supplement[]
   pageSettings: PageSettings | null
 }) {
-  const { addToCart } = useCart()
+  const { addToCart, cart } = useCart()
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -124,14 +125,19 @@ function SupplementsClientInner({
         {/* Floating Cart Button - Modern Style */}
         <button
           onClick={() => setCartOpen(true)}
-          className="fixed bottom-8 right-8 bg-gradient-to-br from-[#F5C211] to-[#FF6B1A] hover:from-[#FFD700] hover:to-[#FF8533] text-black w-16 h-16 rounded-2xl shadow-[0_0_40px_rgba(245,194,17,0.4)] flex items-center justify-center z-50 transition-all hover:scale-110 hover:shadow-[0_0_60px_rgba(245,194,17,0.6)]"
+          className="fixed bottom-6 right-24 sm:bottom-8 sm:right-28 bg-gradient-to-br from-[#F5C211] to-[#FF6B1A] hover:from-[#FFD700] hover:to-[#FF8533] text-black w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shadow-[0_0_40px_rgba(245,194,17,0.4)] flex items-center justify-center z-40 transition-all hover:scale-110 hover:shadow-[0_0_60px_rgba(245,194,17,0.6)]"
           style={{
             animation: 'float 6s ease-in-out infinite'
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 sm:w-7 sm:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
+          {cart.length > 0 && (
+            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+              {cart.length}
+            </div>
+          )}
         </button>
 
         {/* Hero Section - Modern Dark Design */}
@@ -176,7 +182,7 @@ function SupplementsClientInner({
 
             {/* Main Heading */}
             <h1 
-              className="font-['Bebas_Neue'] text-6xl sm:text-8xl md:text-9xl text-white mb-6 tracking-wider"
+              className="font-['Bebas_Neue'] text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white mb-6 tracking-wider"
               style={{ animation: 'slideUp 0.8s ease-out forwards 0.1s', opacity: 0, animationFillMode: 'forwards' }}
             >
               {pageSettings?.bannerTitle || (
@@ -191,7 +197,7 @@ function SupplementsClientInner({
 
             {/* Subtitle */}
             <p 
-              className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10"
+              className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 px-4"
               style={{ animation: 'slideUp 0.8s ease-out forwards 0.2s', opacity: 0, animationFillMode: 'forwards' }}
             >
               {pageSettings?.bannerSubtitle || 'Premium supplements crafted for peak performance. Third-party tested, athlete approved, results guaranteed.'}
@@ -199,7 +205,7 @@ function SupplementsClientInner({
 
             {/* Stats */}
             <div 
-              className="grid grid-cols-3 gap-8 max-w-lg mx-auto mt-16"
+              className="grid grid-cols-3 gap-4 sm:gap-8 max-w-lg mx-auto mt-16 px-4"
               style={{ animation: 'slideUp 0.8s ease-out forwards 0.3s', opacity: 0, animationFillMode: 'forwards' }}
             >
               {[
@@ -208,8 +214,8 @@ function SupplementsClientInner({
                 { value: '24/7', label: 'Support' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="font-['Bebas_Neue'] text-4xl text-[#F5C211] mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
+                  <div className="font-['Bebas_Neue'] text-2xl sm:text-3xl md:text-4xl text-[#F5C211] mb-1">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-gray-500">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -229,13 +235,13 @@ function SupplementsClientInner({
         {/* Filter Bar - Modern Glass Effect */}
         {categories.length > 1 && (
           <section className="sticky top-0 z-40 backdrop-blur-xl bg-[#0A0A0A]/80 border-b border-white/10">
-            <div className="max-w-6xl mx-auto px-6 py-4">
-              <div className="flex flex-wrap gap-3 justify-center">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+              <div className="flex overflow-x-auto gap-2 sm:gap-3 justify-start sm:justify-center pb-2 sm:pb-0 scrollbar-hide">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-6 py-2.5 rounded-xl font-semibold transition-all transform hover:scale-105 ${
+                    className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-semibold text-sm sm:text-base whitespace-nowrap transition-all transform hover:scale-105 ${
                       selectedCategory === cat
                         ? 'bg-gradient-to-r from-[#F5C211] to-[#FF6B1A] text-black shadow-[0_0_30px_rgba(245,194,17,0.4)]'
                         : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
@@ -250,11 +256,11 @@ function SupplementsClientInner({
         )}
 
         {/* Products Grid - Modern Dark Cards */}
-        <section className="relative max-w-7xl mx-auto py-20 px-6">
+        <section className="relative max-w-7xl mx-auto py-12 sm:py-20 px-4 sm:px-6">
           {/* Background Glow */}
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#F5C211]/5 rounded-full blur-[150px] pointer-events-none" />
           
-          <div className="relative z-10 grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {filteredSupplements.map((supplement, index) => (
               <div 
                 key={supplement.id} 
@@ -266,7 +272,7 @@ function SupplementsClientInner({
                 }}
               >
                 {/* Product Image Section with Gradient */}
-                <div className="relative h-80 overflow-hidden">
+                <div className="relative h-64 sm:h-80 overflow-hidden">
                   {/* Gradient Background */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F5C211]/10 to-[#FF6B1A]/10" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
@@ -302,8 +308,8 @@ function SupplementsClientInner({
                 </div>
 
                 {/* Product Info */}
-                <div className="p-8">
-                  <h2 className="font-['Bebas_Neue'] text-3xl text-white mb-4 group-hover:text-[#F5C211] transition-colors tracking-wider">
+                <div className="p-5 sm:p-8">
+                  <h2 className="font-['Bebas_Neue'] text-2xl sm:text-3xl text-white mb-4 group-hover:text-[#F5C211] transition-colors tracking-wider">
                     {supplement.name}
                   </h2>
                   
@@ -392,16 +398,16 @@ function SupplementsClientInner({
           <div className="relative z-10 max-w-6xl mx-auto px-6">
             {/* Section Header */}
             <div className="text-center mb-16">
-              <h2 className="font-['Bebas_Neue'] text-5xl md:text-7xl text-white mb-4 tracking-wider">
+              <h2 className="font-['Bebas_Neue'] text-4xl sm:text-5xl md:text-7xl text-white mb-4 tracking-wider">
                 WHY CHOOSE <span className="bg-gradient-to-r from-[#F5C211] to-[#FF6B1A] bg-clip-text text-transparent">GETFIT?</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                We&apos;re committed to helping you achieve your fitness goals with premium supplements and exceptional service.
+                We are committed to helping you achieve your fitness goals with premium supplements and exceptional service.
               </p>
             </div>
 
             {/* Features Grid */}
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 {
                   icon: (
@@ -467,7 +473,7 @@ function SupplementsClientInner({
           }} />
           
           <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
-            <h2 className="font-['Bebas_Neue'] text-4xl md:text-6xl text-black mb-4 tracking-wider">
+            <h2 className="font-['Bebas_Neue'] text-3xl sm:text-4xl md:text-6xl text-black mb-4 tracking-wider">
               Ready to Fuel Your Fitness Journey?
             </h2>
             <p className="text-lg text-black/80 mb-8 max-w-2xl mx-auto">
@@ -496,7 +502,7 @@ function SupplementsClientInner({
         {/* Footer - Modern Dark */}
         <footer className="relative bg-[#0A0A0A] border-t border-white/10">
           <div className="max-w-6xl mx-auto px-6 py-12">
-            <div className="grid md:grid-cols-3 gap-10 text-center md:text-left mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 text-center sm:text-left mb-8">
               <div>
                 <h3 className="font-['Bebas_Neue'] text-3xl text-[#F5C211] mb-4 tracking-wider">GetFit Gym</h3>
                 <p className="text-gray-400 leading-relaxed">
@@ -556,6 +562,7 @@ export default function SupplementsClient(props: { supplements: Supplement[], pa
   return (
     <CartProvider>
       <SupplementsClientInner {...props} />
+      <WhatsAppButton />
     </CartProvider>
   )
 }

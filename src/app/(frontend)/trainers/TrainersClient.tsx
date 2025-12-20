@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import NavBar from '@/components/NavBar'
 import { getTrainerImageUrl } from '@/lib/cloudinary-urls'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 interface Trainer {
   id: string
@@ -628,6 +629,8 @@ export default function TrainersClient({
           </div>
         </div>
       )}
+
+      <WhatsAppButton />
     </div>
   )
 }
