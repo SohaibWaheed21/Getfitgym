@@ -28,6 +28,22 @@ export const Trainers: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'bannerImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Banner image for trainers page header (optional)',
+      },
+    },
+    {
+      name: 'contentBackgroundImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Background image for the white content section below header (optional)',
+      },
+    },
+    {
       name: 'yearsExp',
       type: 'number',
     },

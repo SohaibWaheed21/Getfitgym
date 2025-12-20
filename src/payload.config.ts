@@ -12,9 +12,13 @@ import { Bookings } from './collections/Bookings'
 import { Supplements } from './collections/Supplements'
 import { Members } from './collections/Members'
 import { Attendance } from './collections/Attendance'
+import { PageSettings } from './collections/PageSettings'
+import { Trial } from './collections/Trial'
+import { Orders } from './collections/Orders'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
 
 export default buildConfig({
   admin: {
@@ -23,7 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Trainers, Bookings, Supplements, Members, Attendance],
+  collections: [Users, Media, Trainers, Bookings, Supplements, Members, Attendance, PageSettings, Trial, Orders],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

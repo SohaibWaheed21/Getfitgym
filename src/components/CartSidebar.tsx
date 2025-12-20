@@ -55,15 +55,15 @@ export default function CartSidebar({
           cart.map((item, index) => (
             <div key={index} className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg mb-3">
               <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200">
-                <img src={`/images/${item.image}`} alt={item.name} className="w-full h-full object-contain rounded-lg" />
+                <img src={item.image} alt={item.name} className="w-full h-full object-contain rounded-lg" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">{item.name}</h3>
                 <p className="text-sm text-gray-600">PKR {item.price.toLocaleString()}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <button onClick={() => changeQuantity(index, -1)} className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">-</button>
-                  <span className="font-semibold">{item.quantity}</span>
-                  <button onClick={() => changeQuantity(index, 1)} className="w-6 h-6 bg-gray-200 hover:bg-gray-300 rounded text-sm font-bold">+</button>
+                <div className="flex items-center gap-3 mt-2">
+                  <button onClick={() => changeQuantity(index, -1)} className="w-8 h-8 bg-white hover:bg-yellow-500 hover:text-white text-gray-800 border-2 border-gray-300 hover:border-yellow-500 rounded-lg font-bold text-lg transition-all shadow-sm hover:shadow-md">-</button>
+                  <span className="font-bold text-gray-800 min-w-[2ch] text-center">{item.quantity}</span>
+                  <button onClick={() => changeQuantity(index, 1)} className="w-8 h-8 bg-white hover:bg-yellow-500 hover:text-white text-gray-800 border-2 border-gray-300 hover:border-yellow-500 rounded-lg font-bold text-lg transition-all shadow-sm hover:shadow-md">+</button>
                 </div>
               </div>
               <div className="text-right">

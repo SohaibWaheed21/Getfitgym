@@ -74,6 +74,9 @@ export interface Config {
     supplements: Supplement;
     members: Member;
     attendance: Attendance;
+    'page-settings': PageSetting;
+    trial: Trial;
+    orders: Order;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +91,9 @@ export interface Config {
     supplements: SupplementsSelect<false> | SupplementsSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
     attendance: AttendanceSelect<false> | AttendanceSelect<true>;
+    'page-settings': PageSettingsSelect<false> | PageSettingsSelect<true>;
+    trial: TrialSelect<false> | TrialSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -157,6 +163,7 @@ export interface User {
 export interface Media {
   id: string;
   alt: string;
+  cloudinary_id?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -193,6 +200,14 @@ export interface Trainer {
     [k: string]: unknown;
   } | null;
   photo?: (string | null) | Media;
+  /**
+   * Banner image for trainers page header (optional)
+   */
+  bannerImage?: (string | null) | Media;
+  /**
+   * Background image for the white content section below header (optional)
+   */
+  contentBackgroundImage?: (string | null) | Media;
   yearsExp?: number | null;
   clients?: number | null;
   rating?: number | null;
@@ -213,6 +228,8 @@ export interface Trainer {
   createdAt: string;
 }
 /**
+ * Trainer booking requests from customers
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "bookings".
  */
@@ -220,8 +237,9 @@ export interface Booking {
   id: string;
   name: string;
   phone: string;
-  email?: string | null;
-  trainer?: (string | null) | Trainer;
+  email: string;
+  trainer: string | Trainer;
+  preferredTime?: ('Morning (6 AM - 12 PM)' | 'Afternoon (12 PM - 6 PM)' | 'Evening (6 PM - 10 PM)') | null;
   goals?:
     | {
         goal?: string | null;
@@ -229,7 +247,18 @@ export interface Booking {
       }[]
     | null;
   notes?: string | null;
-  preferredTime?: string | null;
+  /**
+   * Update booking status as you process requests
+   */
+  status?: ('pending' | 'confirmed' | 'completed' | 'cancelled') | null;
+  /**
+   * Scheduled booking date (set after confirmation)
+   */
+  bookingDate?: string | null;
+  /**
+   * Internal notes for admin use only
+   */
+  adminNotes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -244,6 +273,14 @@ export interface Supplement {
   price: number;
   originalPrice?: number | null;
   image?: (string | null) | Media;
+  /**
+   * Banner image for supplements page header (optional)
+   */
+  bannerImage?: (string | null) | Media;
+  /**
+   * Background image for the white content section below header (optional)
+   */
+  contentBackgroundImage?: (string | null) | Media;
   badge?: string | null;
   badgeColor?: ('red' | 'blue' | 'yellow' | 'green') | null;
   category?: ('Protein' | 'Pre-Workout' | 'Post-Workout' | 'Vitamins') | null;
@@ -312,6 +349,105 @@ export interface Attendance {
   createdAt: string;
 }
 /**
+ * Manage banner images and settings for each page
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-settings".
+ */
+export interface PageSetting {
+  id: string;
+  /**
+   * Select the page to configure
+   */
+  pageName: 'home' | 'trainers' | 'supplements' | 'pricing';
+  /**
+   * Banner image displayed at the top of the page (recommended: 1920x500px)
+   */
+  bannerImage?: (string | null) | Media;
+  /**
+   * Main heading text for the banner
+   */
+  bannerTitle?: string | null;
+  /**
+   * Description text below the main heading
+   */
+  bannerSubtitle?: string | null;
+  /**
+   * Overlay darkness on banner image for better text readability
+   */
+  bannerOverlayColor?: ('dark' | 'medium' | 'light' | 'none') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage the Trial section content on home page
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trial".
+ */
+export interface Trial {
+  id: string;
+  /**
+   * Main heading for trial section
+   */
+  title: string;
+  /**
+   * Description text
+   */
+  description: string;
+  /**
+   * Background image for trial section
+   */
+  backgroundImage?: (string | null) | Media;
+  /**
+   * List of features with checkmarks
+   */
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Form heading
+   */
+  formTitle?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Customer orders from supplements store
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: string;
+  customerName: string;
+  email?: string | null;
+  phone: string;
+  address: string;
+  items: {
+    productName: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+    id?: string | null;
+  }[];
+  totalAmount: number;
+  paymentMethod: 'cash' | 'whatsapp';
+  /**
+   * Order status
+   */
+  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  /**
+   * Internal notes about the order
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -362,6 +498,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'attendance';
         value: string | Attendance;
+      } | null)
+    | ({
+        relationTo: 'page-settings';
+        value: string | PageSetting;
+      } | null)
+    | ({
+        relationTo: 'trial';
+        value: string | Trial;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: string | Order;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -433,6 +581,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  cloudinary_id?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -454,6 +603,8 @@ export interface TrainersSelect<T extends boolean = true> {
   title?: T;
   bio?: T;
   photo?: T;
+  bannerImage?: T;
+  contentBackgroundImage?: T;
   yearsExp?: T;
   clients?: T;
   rating?: T;
@@ -482,6 +633,7 @@ export interface BookingsSelect<T extends boolean = true> {
   phone?: T;
   email?: T;
   trainer?: T;
+  preferredTime?: T;
   goals?:
     | T
     | {
@@ -489,7 +641,9 @@ export interface BookingsSelect<T extends boolean = true> {
         id?: T;
       };
   notes?: T;
-  preferredTime?: T;
+  status?: T;
+  bookingDate?: T;
+  adminNotes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -503,6 +657,8 @@ export interface SupplementsSelect<T extends boolean = true> {
   price?: T;
   originalPrice?: T;
   image?: T;
+  bannerImage?: T;
+  contentBackgroundImage?: T;
   badge?: T;
   badgeColor?: T;
   category?: T;
@@ -542,6 +698,62 @@ export interface AttendanceSelect<T extends boolean = true> {
   date?: T;
   checkmark?: T;
   timestamp?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-settings_select".
+ */
+export interface PageSettingsSelect<T extends boolean = true> {
+  pageName?: T;
+  bannerImage?: T;
+  bannerTitle?: T;
+  bannerSubtitle?: T;
+  bannerOverlayColor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trial_select".
+ */
+export interface TrialSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  backgroundImage?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  formTitle?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  customerName?: T;
+  email?: T;
+  phone?: T;
+  address?: T;
+  items?:
+    | T
+    | {
+        productName?: T;
+        quantity?: T;
+        price?: T;
+        subtotal?: T;
+        id?: T;
+      };
+  totalAmount?: T;
+  paymentMethod?: T;
+  status?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,12 +1,37 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import BmiCalculator from '@/components/BmiCalculator'
 import NavBar from '@/components/NavBar'
 
+interface TrialData {
+  title: string
+  description: string
+  backgroundImage?: {
+    url: string
+    alt?: string
+  }
+  features: Array<{ feature: string; id?: string }>
+  formTitle: string
+}
+
 export default function HomePage() {
+  const [trialData, setTrialData] = useState<TrialData | null>(null)
+
+  useEffect(() => {
+    // Fetch Trial data from Payload
+    fetch('/api/trial?limit=1')
+      .then(res => res.json())
+      .then(data => {
+        if (data.docs && data.docs.length > 0) {
+          setTrialData(data.docs[0])
+        }
+      })
+      .catch(err => console.error('Failed to fetch trial data:', err))
+  }, [])
+
   useEffect(() => {
     // Intersection Observer for scroll-triggered animations
     const observerOptions = {
@@ -60,7 +85,7 @@ export default function HomePage() {
       {/* Banner */}
       <section className="relative h-[60vh] md:h-[80vh] lg:h-[90vh] overflow-hidden">
         <Image 
-          src="/images/banner17.webp" 
+          src="https://res.cloudinary.com/dqxfjca8p/image/upload/v1766228244/gym-media/banner17.webp" 
           alt="Banner" 
           fill 
           className="parallax-bg object-cover transform scale-100 hover:scale-105 transition duration-700 ease-in-out" 
@@ -138,7 +163,7 @@ export default function HomePage() {
           {/* Branch 1 */}
           <div className="scroll-reveal relative h-80 rounded-2xl overflow-hidden shadow-layered group transform transition duration-500 animated-border">
             <Image 
-              src="/images/gulshan2.jpg" 
+              src="https://res.cloudinary.com/dqxfjca8p/image/upload/v1766228246/gym-media/gulshan2.jpg" 
               alt="Gulshan Ravi Branch" 
               fill 
               className="parallax object-cover group-hover:scale-125 transition duration-700 ease-out" 
@@ -159,7 +184,7 @@ export default function HomePage() {
           {/* Branch 2 */}
           <div className="scroll-reveal relative h-80 rounded-2xl overflow-hidden shadow-layered group transform transition duration-500 animated-border">
             <Image 
-              src="/images/islam.jpg" 
+              src="https://res.cloudinary.com/dqxfjca8p/image/upload/v1766228247/gym-media/islam.jpg" 
               alt="Islampura Branch" 
               fill 
               className="parallax object-cover group-hover:scale-125 transition duration-700 ease-out" 
@@ -183,7 +208,7 @@ export default function HomePage() {
       <section className="grid grid-cols-1 md:grid-cols-2">
         {/* Left Side: What is BMI */}
         <div className="relative h-96 md:h-auto">
-          <Image src="/images/bmi.jpg" alt="BMI Background" fill className="object-cover" />
+          <Image src="https://res.cloudinary.com/dqxfjca8p/image/upload/v1766228256/gym-media/bmi.jpg" alt="BMI Background" fill className="object-cover" />
           <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center p-8">
             <div className="text-center text-white animate-fadeInUp scroll-reveal">
               <h2 className="text-4xl font-extrabold mb-4 tracking-wide drop-shadow-md">
@@ -211,20 +236,39 @@ export default function HomePage() {
       </section>
 
       <section id="trial" className="relative py-20">
-        <Image src="/images/trial.jpg" alt="Trial Background" fill className="object-cover" />
+        <Image 
+          src={trialData?.backgroundImage?.url || "https://res.cloudinary.com/dqxfjca8p/image/upload/v1766228258/gym-media/trial.jpg"} 
+          alt={trialData?.backgroundImage?.alt || "Trial Background"} 
+          fill 
+          className="object-cover" 
+        />
         <div className="absolute inset-0 bg-black bg-opacity-70"></div>
         <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
           <div className="text-white space-y-6">
-            <h2 className="text-4xl font-bold leading-tight">We’re Not Like Others</h2>
-            <p className="text-lg text-gray-300">At GetFit Gym, we don’t believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!</p>
+            <h2 className="text-4xl font-bold leading-tight">
+              {trialData?.title || "We're Not Like Others"}
+            </h2>
+            <p className="text-lg text-gray-300">
+              {trialData?.description || "At GetFit Gym, we don't believe in shortcuts. We believe in building stronger bodies and sharper minds. Join us and start your transformation today!"}
+            </p>
             <ul className="space-y-2 text-lg">
-              <li>✔ Personalized training</li>
-              <li>✔ Modern equipment</li>
-              <li>✔ Supportive community</li>
+              {trialData?.features && trialData.features.length > 0 ? (
+                trialData.features.map((item, index) => (
+                  <li key={item.id || index}>✔ {item.feature}</li>
+                ))
+              ) : (
+                <>
+                  <li>✔ Personalized training</li>
+                  <li>✔ Modern equipment</li>
+                  <li>✔ Supportive community</li>
+                </>
+              )}
             </ul>
           </div>
           <div className="bg-gray-900 bg-opacity-90 p-8 rounded-xl shadow-lg">
-            <h3 className="text-2xl font-semibold text-white mb-6 text-center">Start Your Trial</h3>
+            <h3 className="text-2xl font-semibold text-white mb-6 text-center">
+              {trialData?.formTitle || "Start Your Trial"}
+            </h3>
             <form className="space-y-4">
               <input type="text" placeholder="Full Name" className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white" />
               <input type="email" placeholder="Email Address" className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white" />

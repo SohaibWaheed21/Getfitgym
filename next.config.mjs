@@ -4,7 +4,13 @@ import { withPayload } from '@payloadcms/next/withPayload'
 const nextConfig = {
   // Your Next.js config here
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/dqxfjca8p/**',
+      },
+    ],
     unoptimized: false,
   },
   webpack: (webpackConfig) => {

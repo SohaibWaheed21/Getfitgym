@@ -42,6 +42,7 @@ next-env.d.ts
 
 # Media and uploads (PayloadCMS)
 /media
+/Source-img
 /public/media
 
 # Playwright

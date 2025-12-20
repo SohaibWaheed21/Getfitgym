@@ -6,7 +6,7 @@ import NavBar from '@/components/NavBar'
 import ProductCard from '@/components/ProductCard'
 import CartSidebar from '@/components/CartSidebar'
 import CheckoutModal from '@/components/CheckoutModal'
-import { CartProvider } from '@/contexts/CartContext'
+import { CartProvider, useCart } from '@/contexts/CartContext'
 
 interface Supplement {
   id: string
@@ -14,6 +14,8 @@ interface Supplement {
   price: number
   originalPrice?: number
   image: { url: string }
+  bannerImage?: { url: string }
+  contentBackgroundImage?: { url: string }
   badge?: string
   badgeColor?: string
   category?: string
@@ -21,7 +23,21 @@ interface Supplement {
   specs?: string
 }
 
-export default function SupplementsClient({ supplements }: { supplements: Supplement[] }) {
+interface PageSettings {
+  bannerImage?: { url: string } | null
+  bannerTitle?: string | null
+  bannerSubtitle?: string | null
+  bannerOverlayColor?: string | null
+}
+
+function SupplementsClientInner({ 
+  supplements,
+  pageSettings 
+}: { 
+  supplements: Supplement[]
+  pageSettings: PageSettings | null
+}) {
+  const { addToCart } = useCart()
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -71,9 +87,8 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
     : supplements.filter(s => s.category === selectedCategory)
 
   return (
-    <CartProvider>
-      <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
-        <NavBar />
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+      <NavBar />
 
         {/* Floating Cart Button */}
         <button
@@ -87,6 +102,24 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
 
         {/* Page Header with Floating Particles */}
         <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 gradient-animated overflow-hidden">
+          {/* Banner Image Background (from PageSettings or fallback to supplement banner) */}
+          {(pageSettings?.bannerImage?.url || supplements[0]?.bannerImage?.url) && (
+            <>
+              <div 
+                className="absolute inset-0 bg-cover bg-center z-0"
+                style={{ backgroundImage: `url(${pageSettings?.bannerImage?.url || supplements[0]?.bannerImage?.url})` }}
+              />
+              <div 
+                className={`absolute inset-0 z-0 ${
+                  pageSettings?.bannerOverlayColor === 'light' ? 'bg-black/40' :
+                  pageSettings?.bannerOverlayColor === 'medium' ? 'bg-black/60' :
+                  pageSettings?.bannerOverlayColor === 'none' ? 'bg-black/0' :
+                  'bg-gradient-to-br from-black/80 via-black/70 to-black/80'
+                }`}
+              ></div>
+            </>
+          )}
+          
           {/* Floating Particles Background Animation */}
           <div className="header-particles absolute w-full h-full overflow-hidden z-1">
             <div className="particle absolute bg-yellow-500/15 rounded-full w-20 h-20 left-[10%]" style={{ animation: 'float 12s infinite ease-in-out' }}></div>
@@ -99,10 +132,10 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <div className="relative z-10 max-w-6xl mx-auto text-center px-6">
             <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 animate-fadeUp">
-              Premium Supplements
+              {pageSettings?.bannerTitle || 'Premium Supplements'}
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto animate-fadeUp delay-200">
-              Fuel your fitness journey with our carefully selected, high-quality supplements designed to maximize your results
+              {pageSettings?.bannerSubtitle || 'Fuel your fitness journey with our carefully selected, high-quality supplements designed to maximize your results'}
             </p>
           </div>
         </section>
@@ -131,18 +164,32 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
         )}
 
         {/* Products Grid */}
-        <section className="max-w-6xl mx-auto py-16 px-6">
-          <div className="grid md:grid-cols-2 gap-12">
+        <section className="relative max-w-6xl mx-auto py-16 px-6 overflow-hidden">
+          {/* Content Background Image (if available) */}
+          {supplements[0]?.contentBackgroundImage?.url && (
+            <>
+              <div 
+                className="absolute inset-0 bg-cover bg-center z-0 opacity-10"
+                style={{ backgroundImage: `url(${supplements[0].contentBackgroundImage.url})` }}
+              />
+              <div className="absolute inset-0 bg-gray-50/90 z-0"></div>
+            </>
+          )}
+          
+          <div className="relative z-10 grid md:grid-cols-2 gap-12">
             {filteredSupplements.map((supplement, index) => (
               <div key={supplement.id} className="product-card bg-white rounded-3xl shadow-professional-xl overflow-hidden scroll-reveal">
                 {/* Product Image */}
-                <div className="relative w-full h-80 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden image-zoom rounded-t-2xl flex items-center justify-center p-4">
-                  <Image
-                    src={supplement.image?.url || '/images/placeholder.jpg'}
-                    alt={supplement.name}
-                    fill
-                    className="object-contain p-4"
-                  />
+                <div className="relative w-full h-80 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden image-zoom rounded-t-2xl flex items-center justify-center p-8">
+                  {supplement.image?.url ? (
+                    <img
+                      src={supplement.image.url}
+                      alt={supplement.name}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div className="text-gray-400 text-6xl">📦</div>
+                  )}
                   {supplement.badge && (
                     <div className={`absolute top-4 right-4 ${supplement.badgeColor || 'bg-red-500'} text-white px-3 py-1 rounded-full text-sm font-semibold shadow-professional badge-pulse`}>
                       {supplement.badge}
@@ -185,7 +232,10 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
                       )}
                     </div>
                     <button
-                      onClick={() => setCartOpen(true)}
+                      onClick={() => {
+                        addToCart({ name: supplement.name, price: supplement.price, image: supplement.image.url }, 1)
+                        setCartOpen(true)
+                      }}
                       className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold shadow-professional-lg transition transform hover:scale-105 btn-professional"
                     >
                       Add to Cart
@@ -327,6 +377,13 @@ export default function SupplementsClient({ supplements }: { supplements: Supple
           onClose={() => setCheckoutOpen(false)} 
         />
       </div>
+  )
+}
+
+export default function SupplementsClient(props: { supplements: Supplement[], pageSettings: PageSettings | null }) {
+  return (
+    <CartProvider>
+      <SupplementsClientInner {...props} />
     </CartProvider>
   )
 }

@@ -33,6 +33,22 @@ export const Supplements: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'bannerImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Banner image for supplements page header (optional)',
+      },
+    },
+    {
+      name: 'contentBackgroundImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Background image for the white content section below header (optional)',
+      },
+    },
+    {
       name: 'badge',
       type: 'text',
     },

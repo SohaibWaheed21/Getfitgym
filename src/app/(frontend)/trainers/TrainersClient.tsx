@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import NavBar from '@/components/NavBar'
 
 interface Trainer {
@@ -9,6 +10,8 @@ interface Trainer {
   title?: string | null
   bio?: string | null
   photo?: { url: string } | null
+  bannerImage?: { url: string } | null
+  contentBackgroundImage?: { url: string } | null
   achievements?: Array<{ achievement: string }> | null
   yearsExp?: number | null
   clients?: number | null
@@ -16,9 +19,23 @@ interface Trainer {
   specialties?: Array<{ specialty: string }> | null
 }
 
-export default function TrainersClient({ trainers }: { trainers: Trainer[] }) {
+interface PageSettings {
+  bannerImage?: { url: string } | null
+  bannerTitle?: string | null
+  bannerSubtitle?: string | null
+  bannerOverlayColor?: string | null
+}
+
+export default function TrainersClient({ 
+  trainers, 
+  pageSettings 
+}: { 
+  trainers: Trainer[]
+  pageSettings: PageSettings | null
+}) {
   const [bookingOpen, setBookingOpen] = useState(false)
   const [selectedTrainer, setSelectedTrainer] = useState<Trainer | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     // Scroll Reveal Animation
@@ -54,369 +71,556 @@ export default function TrainersClient({ trainers }: { trainers: Trainer[] }) {
     document.body.style.overflow = 'auto'
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    alert(`🎉 Booking Request Submitted!\n\nWe'll contact you within 24 hours to confirm your session with ${selectedTrainer?.name}.\n\nGet ready to transform! 💪`)
-    closeBooking()
+    setIsSubmitting(true)
+
+    const formData = new FormData(e.currentTarget)
+    
+    // Collect selected goals
+    const goals: string[] = []
+    formData.getAll('goals').forEach(goal => {
+      if (goal) goals.push(goal as string)
+    })
+
+    const bookingData = {
+      name: formData.get('name') as string,
+      phone: formData.get('phone') as string,
+      email: formData.get('email') as string,
+      trainer: selectedTrainer?.id,
+      goals: goals.map(goal => ({ goal })),
+      notes: formData.get('notes') as string,
+      preferredTime: formData.get('preferredTime') as string,
+    }
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      })
+
+      if (response.ok) {
+        alert(`🎉 Booking Request Submitted!\n\nWe'll contact you within 24 hours to confirm your session with ${selectedTrainer?.name}.\n\nGet ready to transform! 💪`)
+        closeBooking()
+      } else {
+        const error = await response.json()
+        alert(`❌ Error: ${error.message || 'Failed to submit booking. Please try again.'}`)
+      }
+    } catch (error) {
+      console.error('Booking error:', error)
+      alert('❌ Network error. Please check your connection and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const featuredTrainer = trainers[0]
-  const otherTrainers = trainers.slice(1)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black text-gray-200 font-sans selection:bg-yellow-500 selection:text-black">
       <NavBar />
 
-      {/* Page Header */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 overflow-hidden">
-        {/* Animated Background - Floating Dumbbells */}
-        <div className="header-fitness-bg">
-          {[...Array(5)].map((_, i) => (
-            <svg key={i} className="dumbbell" viewBox="0 0 100 100" fill="#eab308">
-              <rect x="20" y="40" width="8" height="20" rx="2" />
-              <rect x="28" y="35" width="44" height="30" rx="3" />
-              <rect x="72" y="40" width="8" height="20" rx="2" />
-            </svg>
-          ))}
+      {/* Header Section with Animated Background */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          {/* Banner Image if available from PageSettings */}
+          {pageSettings?.bannerImage?.url && (
+            <>
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${pageSettings.bannerImage.url})` }}
+              />
+              <div 
+                className={`absolute inset-0 ${
+                  pageSettings?.bannerOverlayColor === 'light' ? 'bg-black/40' :
+                  pageSettings?.bannerOverlayColor === 'medium' ? 'bg-black/60' :
+                  pageSettings?.bannerOverlayColor === 'none' ? 'bg-black/0' :
+                  'bg-black/80'
+                }`}
+              />
+            </>
+          )}
+          
+          {!pageSettings?.bannerImage?.url && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-black opacity-90"></div>
+              <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+            </>
+          )}
+
+          {/* Grid Pattern Overlay */}
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
         </div>
-        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-        <div className="relative z-10 max-w-6xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 animate-fadeUp">
-            Meet Your Elite Trainers
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <span className="inline-block py-1 px-3 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-xs font-bold tracking-widest uppercase mb-6 animate-fadeUp">
+            Elite Coaching
+          </span>
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-6 animate-fadeUp delay-100 tracking-tight">
+            {pageSettings?.bannerTitle || 'MASTER YOUR'}{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
+              {pageSettings?.bannerTitle ? '' : 'POTENTIAL'}
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto animate-fadeUp delay-200">
-            World-class certified professionals ready to transform your fitness journey with personalized training
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto animate-fadeUp delay-200 font-light leading-relaxed">
+            {pageSettings?.bannerSubtitle || "Train with the industry's best. Our certified experts combine science, motivation, and discipline to help you break every limit."}
           </p>
-          <div className="mt-8 flex justify-center items-center space-x-4 animate-fadeUp delay-400">
-            <div className="flex items-center text-yellow-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="font-semibold">Certified Trainers</span>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Featured Trainer Section */}
+      {/* Featured Trainer - Compact Horizontal Design */}
       {featuredTrainer && (
-        <section className="max-w-7xl mx-auto py-20 px-6">
-          <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Our Featured Trainer</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Meet the champion who will guide you toward your fitness goals</p>
-          </div>
-
-          {/* Centralized Featured Trainer Card */}
-          <div className="max-w-2xl mx-auto mb-20">
-            <div className="trainer-card-main scroll-reveal bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-3xl shadow-xl overflow-hidden border border-yellow-500/20">
-              <div className="p-8 text-center">
-                {/* Profile Photo */}
-                <div className="relative mb-6">
-                  <div className="w-56 h-56 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl p-0.5">
-                    {featuredTrainer.photo?.url ? (
-                      <img 
-                        src={featuredTrainer.photo.url} 
-                        alt={featuredTrainer.name}
-                        className="w-full h-full rounded-full object-cover border-2 border-gray-800 shadow-xl"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-700 rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-28 h-28 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                      </div>
-                    )}
+        <section className="relative z-10 max-w-5xl mx-auto px-6 mt-16 mb-24">
+          <div className="scroll-reveal group relative bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:border-yellow-500/30 transition-all duration-500">
+            <div className="flex flex-col md:flex-row">
+              {/* Left: Image with Color Grade */}
+              <div className="relative w-full md:w-2/5 h-[400px] md:h-auto overflow-hidden">
+                <div className="absolute inset-0 bg-yellow-500/10 mix-blend-overlay z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-80 md:opacity-40"></div>
+                {featuredTrainer.photo?.url ? (
+                  <Image
+                    src={featuredTrainer.photo.url}
+                    alt={featuredTrainer.name}
+                    fill
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-32 h-32 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
                   </div>
-                  {/* Status Badge */}
-                  <div className="absolute top-2 right-1/2 transform translate-x-24 w-10 h-10 bg-green-500 rounded-full border-4 border-gray-800 flex items-center justify-center shadow-lg">
-                    <span className="text-lg text-white font-bold">✓</span>
+                )}
+                {/* Floating Badge */}
+                <div className="absolute bottom-4 left-4 z-20 bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Available Today
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Content */}
+              <div className="w-full md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="text-3xl font-black text-white mb-1 tracking-wide uppercase italic">
+                      {featuredTrainer.name}
+                    </h2>
+                    <p className="text-yellow-500 font-bold tracking-wider text-sm">
+                      {featuredTrainer.title || 'Master Trainer'}
+                    </p>
+                  </div>
+                  <div className="hidden md:block">
+                    <span className="text-4xl">🔥</span>
                   </div>
                 </div>
 
-                {/* Name & Title */}
-                <h2 className="text-2xl font-bold text-white mb-2">{featuredTrainer.name}</h2>
-                {featuredTrainer.title && (
-                  <p className="text-yellow-400 font-semibold mb-1">{featuredTrainer.title}</p>
-                )}
-                <p className="text-gray-300 text-sm mb-4">Certified Personal Trainer</p>
-
-                {/* Achievements Badges */}
-                {featuredTrainer.achievements && featuredTrainer.achievements.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-2 mb-6">
-                    {featuredTrainer.achievements.map((achievement, idx) => (
-                      <span key={idx} className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black text-xs px-3 py-1 rounded-full font-semibold">
-                        🏆 {achievement.achievement}
-                      </span>
-                    ))}
+                {/* Stats Grid - Compact */}
+                <div className="grid grid-cols-3 gap-4 mb-8 border-y border-white/5 py-6">
+                  <div className="text-center border-r border-white/5 last:border-0">
+                    <span className="block text-2xl font-bold text-white">
+                      {featuredTrainer.yearsExp || '5'}+
+                    </span>
+                    <span className="text-[10px] uppercase text-gray-500 tracking-wider">
+                      Years Exp
+                    </span>
                   </div>
-                )}
-
-                {/* Bio */}
-                {featuredTrainer.bio && (
-                  <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                    💪 {featuredTrainer.bio}
-                  </p>
-                )}
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-800/50 rounded-xl border border-yellow-500/20">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-400">{featuredTrainer.yearsExp || '-'}+</div>
-                    <div className="text-xs text-gray-400">Years Exp</div>
+                  <div className="text-center border-r border-white/5 last:border-0">
+                    <span className="block text-2xl font-bold text-white">
+                      {featuredTrainer.clients || '100'}+
+                    </span>
+                    <span className="text-[10px] uppercase text-gray-500 tracking-wider">
+                      Clients
+                    </span>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-400">{featuredTrainer.clients || '-'}+</div>
-                    <div className="text-xs text-gray-400">Clients</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-400">{featuredTrainer.rating || '-'}</div>
-                    <div className="text-xs text-gray-400">Rating</div>
+                    <span
+                      className="block text-2xl font-bold text-white max-w-[5ch] mx-auto truncate"
+                      title={String(featuredTrainer.rating || '5.0')}
+                    >
+                      {featuredTrainer.rating || '5.0'}
+                    </span>
+                    <span className="text-[10px] uppercase text-gray-500 tracking-wider">
+                      Rating
+                    </span>
                   </div>
                 </div>
 
-                {/* Specialties */}
-                {featuredTrainer.specialties && featuredTrainer.specialties.length > 0 && (
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-white mb-3 text-sm">Specialties:</h4>
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {featuredTrainer.specialties.map((specialty, idx) => (
-                        <span key={idx} className="bg-yellow-500/20 text-yellow-400 text-xs px-3 py-1 rounded-full border border-yellow-500/30">
-                          {specialty.specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Compact Tags */}
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {featuredTrainer.specialties?.slice(0, 3).map((spec, i) => (
+                    <span
+                      key={i}
+                      className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-gray-300 font-medium"
+                    >
+                      {spec.specialty}
+                    </span>
+                  ))}
+                  {featuredTrainer.achievements?.slice(0, 1).map((ach, i) => (
+                    <span
+                      key={i}
+                      className="px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-xs text-yellow-400 font-medium"
+                    >
+                      🏆 {ach.achievement}
+                    </span>
+                  ))}
+                </div>
 
-                {/* CTA Buttons */}
-                <div className="space-y-3">
+                <div className="flex gap-4 mt-auto">
                   <button
                     onClick={() => openBooking(featuredTrainer)}
-                    className="btn-ripple w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105"
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl uppercase tracking-wider text-sm transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)]"
                   >
                     Book Session
                   </button>
-                  <button className="btn-ripple w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-xl font-medium transition">
-                    View Profile
+                  <button className="px-6 py-4 rounded-xl border border-white/20 hover:bg-white/5 text-white font-bold transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* More Trainers Coming Soon Section */}
-          <div className="mt-16 scroll-reveal delay-200">
-            <div className="text-center mb-12">
-              <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3">More Elite Trainers Coming Soon</h3>
-              <p className="text-gray-600 text-lg">We're expanding our team of world-class professionals</p>
+          
+          {/* Upcoming Trainers - Modern Glassmorphism Design */}
+          <div className="mt-24">
+            <div className="text-center mb-16">
+              <span className="text-yellow-400 text-sm font-bold tracking-[0.2em] uppercase">
+                UPCOMING SPECIALISTS
+              </span>
+              <h3 className="text-4xl font-black text-white mt-3 mb-4 tracking-tight uppercase italic">
+                New Trainers Joining
+              </h3>
+              <p className="text-gray-400">Expanding our roster with world-class expertise</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {/* Coming Soon Card 1 */}
-              <div className="coming-soon-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center border-2 border-dashed border-gray-300">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,9H13V15H11V9M12,17A1,1 0 0,0 11,18A1,1 0 0,0 12,19A1,1 0 0,0 13,18A1,1 0 0,0 12,17Z" />
-                  </svg>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* HIIT Specialist */}
+              <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-500/50 transition-all group">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-2xl">
+                    ⚡
+                  </div>
+                  <span className="text-xs px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-bold">
+                    COMING SOON
+                  </span>
                 </div>
-                <h4 className="text-xl font-bold text-gray-800 mb-2">Strength Specialist</h4>
-                <p className="text-sm text-gray-600 mb-3">Expert in powerlifting and strength conditioning</p>
-                <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">Recruiting Now</span>
+                <h4 className="text-xl font-black text-white mb-2 uppercase tracking-wide">
+                  HIIT Specialist
+                </h4>
+                <p className="text-sm text-gray-400 mb-4">
+                  High-intensity interval training expert with competitive athletic background
+                </p>
+                <div className="flex gap-2 text-xs">
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Cardio</span>
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Fat Loss</span>
+                </div>
               </div>
 
-              {/* Coming Soon Card 2 */}
-              <div className="coming-soon-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center border-2 border-dashed border-gray-300">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,9H13V15H11V9M12,17A1,1 0 0,0 11,18A1,1 0 0,0 12,19A1,1 0 0,0 13,18A1,1 0 0,0 12,17Z" />
-                  </svg>
+              {/* Yoga Master */}
+              <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-500/50 transition-all group">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-2xl">
+                    🧘‍♂️
+                  </div>
+                  <span className="text-xs px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-bold">
+                    COMING SOON
+                  </span>
                 </div>
-                <h4 className="text-xl font-bold text-gray-800 mb-2">Cardio Coach</h4>
-                <p className="text-sm text-gray-600 mb-3">Specializes in HIIT and endurance training</p>
-                <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">Recruiting Now</span>
+                <h4 className="text-xl font-black text-white mb-2 uppercase tracking-wide">
+                  Yoga Master
+                </h4>
+                <p className="text-sm text-gray-400 mb-4">
+                  Certified yoga instructor specializing in flexibility and mind-body wellness
+                </p>
+                <div className="flex gap-2 text-xs">
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Yoga</span>
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Mobility</span>
+                </div>
               </div>
 
-              {/* Coming Soon Card 3 */}
-              <div className="coming-soon-card bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center border-2 border-dashed border-gray-300">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,9H13V15H11V9M12,17A1,1 0 0,0 11,18A1,1 0 0,0 12,19A1,1 0 0,0 13,18A1,1 0 0,0 12,17Z" />
-                  </svg>
+              {/* Powerlifter */}
+              <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:border-yellow-500/50 transition-all group">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-2xl">
+                    🏋️‍♂️
+                  </div>
+                  <span className="text-xs px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-bold">
+                    COMING SOON
+                  </span>
                 </div>
-                <h4 className="text-xl font-bold text-gray-800 mb-2">Nutrition Expert</h4>
-                <p className="text-sm text-gray-600 mb-3">Certified nutritionist and diet planning</p>
-                <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">Recruiting Now</span>
-              </div>
-            </div>
-
-            {/* Join Team CTA */}
-            <div className="mt-12 text-center scroll-reveal delay-300">
-              <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-2xl p-8 max-w-3xl mx-auto border border-yellow-200">
-                <h4 className="text-2xl font-bold text-gray-900 mb-3">Are You a Certified Trainer?</h4>
-                <p className="text-gray-700 mb-6">Join our elite team and help transform lives. We're looking for passionate, certified trainers to expand our family.</p>
-                <button className="btn-ripple bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105">
-                  Apply to Join Our Team
-                </button>
+                <h4 className="text-xl font-black text-white mb-2 uppercase tracking-wide">
+                  Powerlifter
+                </h4>
+                <p className="text-sm text-gray-400 mb-4">
+                  National powerlifting champion focused on maximal strength development
+                </p>
+                <div className="flex gap-2 text-xs">
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Strength</span>
+                  <span className="px-2 py-1 rounded bg-white/5 text-gray-300">Power</span>
+                </div>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Why Train With Us */}
-      <section className="bg-gradient-to-br from-gray-900 to-black py-20">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">Why Train With Our Elite Squad?</h2>
+      {/* Why Train With Us - Minimalist */}
+      <section className="relative py-24 px-6">
+        <div className="absolute inset-0 bg-black"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500/5 to-transparent"></div>
+        
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-yellow-400 text-sm font-bold tracking-[0.2em] uppercase">
+              ELITE ADVANTAGES
+            </span>
+            <h2 className="text-4xl font-black text-white mt-3 tracking-tight uppercase italic">
+              Why Choose Our Squad
+            </h2>
+          </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="feature-card scroll-reveal bg-gray-800 p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">🎓</span>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Certified Pros</h3>
-              <p className="text-gray-300 text-sm">International certifications & proven expertise</p>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center hover:border-yellow-500/50 transition-all">
+              <div className="text-4xl mb-4">🎓</div>
+              <h3 className="text-sm font-black text-white mb-2 uppercase tracking-wider">Certified Pros</h3>
+              <p className="text-xs text-gray-400">International certifications</p>
             </div>
 
-            <div className="feature-card scroll-reveal delay-100 bg-gray-800 p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">🏆</span>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Champions</h3>
-              <p className="text-gray-300 text-sm">Award-winning trainers with real results</p>
+            <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center hover:border-yellow-500/50 transition-all">
+              <div className="text-4xl mb-4">🏆</div>
+              <h3 className="text-sm font-black text-white mb-2 uppercase tracking-wider">Champions</h3>
+              <p className="text-xs text-gray-400">Award-winning trainers</p>
             </div>
 
-            <div className="feature-card scroll-reveal delay-200 bg-gray-800 p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">💪</span>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Personalized</h3>
-              <p className="text-gray-300 text-sm">Custom plans tailored to your goals</p>
+            <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center hover:border-yellow-500/50 transition-all">
+              <div className="text-4xl mb-4">💪</div>
+              <h3 className="text-sm font-black text-white mb-2 uppercase tracking-wider">Personalized</h3>
+              <p className="text-xs text-gray-400">Custom plans for you</p>
             </div>
 
-            <div className="feature-card scroll-reveal delay-300 bg-gray-800 p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl">🔥</span>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Motivation</h3>
-              <p className="text-gray-300 text-sm">24/7 support to keep you on track</p>
+            <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center hover:border-yellow-500/50 transition-all">
+              <div className="text-4xl mb-4">🔥</div>
+              <h3 className="text-sm font-black text-white mb-2 uppercase tracking-wider">Motivation</h3>
+              <p className="text-xs text-gray-400">24/7 support system</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="bg-yellow-500 py-12">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold text-black mb-4">Ready to Level Up Your Fitness Game? 💯</h2>
-          <p className="text-lg text-gray-800 mb-8">Book your first session with our elite trainers and start your transformation journey today!</p>
+      {/* CTA Section - Compact */}
+      <section className="relative py-16 px-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
+        
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-black text-black mb-3 uppercase tracking-tight italic">
+            Ready To Transform?
+          </h2>
+          <p className="text-black/80 font-medium mb-8">
+            Book your first session and start your journey today
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-ripple bg-black text-yellow-400 px-8 py-3 rounded-xl font-semibold hover:bg-gray-800 transition transform hover:scale-105">
-              Book Free Consultation
+            <button className="bg-black text-yellow-400 px-8 py-4 rounded-xl font-black uppercase tracking-wider text-sm hover:bg-gray-900 transition-all transform hover:-translate-y-1 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+              Book Free Session
             </button>
-            <Link href="/pricing" className="btn-ripple bg-white text-black px-8 py-3 rounded-xl font-semibold border-2 border-black hover:bg-gray-100 transition transform hover:scale-105 inline-block">
+            <Link 
+              href="/pricing" 
+              className="bg-white/20 backdrop-blur-sm border-2 border-black text-black px-8 py-4 rounded-xl font-black uppercase tracking-wider text-sm hover:bg-white/30 transition-all transform hover:-translate-y-1 inline-block"
+            >
               View Packages
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-950 text-gray-400 py-10 border-t-2 border-yellow-500/20 glow-yellow">
-        <div className="max-w-6xl mx-auto px-6 grid gap-10 md:grid-cols-3 text-center md:text-left">
-          <div>
-            <h3 className="text-2xl font-bold text-yellow-500 mb-4">GetFit Gym</h3>
-            <p className="leading-relaxed">
-              Building stronger bodies and sharper minds. <br />
-              Join our community today!
-            </p>
+      {/* Footer - Minimal Dark */}
+      <footer className="relative bg-black py-12 px-6 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left mb-8">
+            <div>
+              <h3 className="text-2xl font-black text-yellow-500 mb-3 uppercase tracking-wider italic">
+                GetFit
+              </h3>
+              <p className="text-gray-400 text-sm">
+                Building stronger bodies<br />and sharper minds
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-black text-white mb-3 uppercase tracking-wider">Quick Links</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/" className="text-gray-400 hover:text-yellow-400 transition">Home</Link></li>
+                <li><Link href="/trainers" className="text-gray-400 hover:text-yellow-400 transition">Trainers</Link></li>
+                <li><Link href="/supplements" className="text-gray-400 hover:text-yellow-400 transition">Supplements</Link></li>
+                <li><Link href="/pricing" className="text-gray-400 hover:text-yellow-400 transition">Pricing</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-black text-white mb-3 uppercase tracking-wider">Contact</h4>
+              <div className="space-y-2 text-sm text-gray-400">
+                <p><a href="mailto:getfitness01@gmail.com" className="hover:text-yellow-400 transition">getfitness01@gmail.com</a></p>
+                <p><a href="tel:+923143586891" className="hover:text-yellow-400 transition">+92 314 358 6891</a></p>
+                <p>Islampura, Lahore, PK</p>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-2xl font-bold text-yellow-500 mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><Link href="/" className="link-glow hover:text-yellow-400 transition">Home</Link></li>
-              <li><Link href="/trainers" className="link-glow hover:text-yellow-400 transition">Trainers</Link></li>
-              <li><Link href="/supplements" className="link-glow hover:text-yellow-400 transition">Supplements</Link></li>
-              <li><Link href="/pricing" className="link-glow hover:text-yellow-400 transition">Pricing</Link></li>
-            </ul>
+          <div className="text-center text-gray-500 text-xs pt-8 border-t border-white/5">
+            &copy; 2025 <span className="text-yellow-500 font-bold">GetFit Gym</span>. All rights reserved.
           </div>
-
-          <div>
-            <h3 className="text-2xl font-bold text-yellow-500 mb-4">Contact</h3>
-            <p>Email: <a href="mailto:getfitness01@gmail.com" className="hover:text-yellow-400 transition">getfitness01@gmail.com</a></p>
-            <p>Phone: <a href="tel:+923143586891" className="hover:text-yellow-400 transition">+92 3143586891</a></p>
-            <p>Address: Islampura Alamgir road Lahore, Pakistan</p>
-          </div>
-        </div>
-
-        <div className="text-center text-gray-500 mt-8 border-t border-gray-800 pt-4 text-sm">
-          &copy; 2025 <span className="text-yellow-500 font-semibold">GetFit Gym</span>. All rights reserved.
         </div>
       </footer>
 
-      {/* Booking Modal */}
+      {/* Booking Modal - Dark Theme */}
       {bookingOpen && selectedTrainer && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={closeBooking}>
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            {/* Modal Header */}
-            <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-6 rounded-t-3xl">
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" 
+          onClick={closeBooking}
+        >
+          <div 
+            className="bg-gray-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header - Black with Yellow Accent */}
+            <div className="bg-black border-b border-white/10 p-6 rounded-t-3xl">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-white">Book Your Session</h2>
-                <button onClick={closeBooking} className="text-white hover:text-gray-200 transition">
+                <div>
+                  <h2 className="text-2xl font-black text-white uppercase tracking-wide italic">
+                    Book Session
+                  </h2>
+                  <p className="text-yellow-400 text-sm font-medium mt-1">
+                    with {selectedTrainer.name}
+                  </p>
+                </div>
+                <button 
+                  onClick={closeBooking} 
+                  className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-lg"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              <p className="text-white text-sm mt-2">Train with {selectedTrainer.name}</p>
             </div>
 
-            {/* Modal Form */}
+            {/* Modal Form - Dark Inputs */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Full Name *</label>
-                <input type="text" required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition" />
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Full Name *
+                </label>
+                <input 
+                  type="text" 
+                  name="name"
+                  required 
+                  className="w-full px-4 py-3 bg-black border border-white/10 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition text-white placeholder-gray-500" 
+                  placeholder="Enter your name"
+                />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Phone Number *</label>
-                <input type="tel" required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition" placeholder="+92 300 1234567" />
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Phone Number *
+                </label>
+                <input 
+                  type="tel" 
+                  name="phone"
+                  required 
+                  className="w-full px-4 py-3 bg-black border border-white/10 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition text-white placeholder-gray-500" 
+                  placeholder="+92 300 1234567" 
+                />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Email Address *</label>
-                <input type="email" required className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition" />
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Email Address *
+                </label>
+                <input 
+                  type="email" 
+                  name="email"
+                  required 
+                  className="w-full px-4 py-3 bg-black border border-white/10 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition text-white placeholder-gray-500" 
+                  placeholder="your@email.com"
+                />
               </div>
 
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Fitness Goals *</label>
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Preferred Time
+                </label>
+                <select 
+                  name="preferredTime"
+                  className="w-full px-4 py-3 bg-black border border-white/10 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition text-white"
+                >
+                  <option value="">Select time slot</option>
+                  <option value="Morning (6 AM - 12 PM)">Morning (6 AM - 12 PM)</option>
+                  <option value="Afternoon (12 PM - 6 PM)">Afternoon (12 PM - 6 PM)</option>
+                  <option value="Evening (6 PM - 10 PM)">Evening (6 PM - 10 PM)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Fitness Goals *
+                </label>
                 <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="text-yellow-500 mr-2 rounded" />
-                    <span className="text-sm">Weight Loss</span>
+                  <label className="flex items-center bg-black border border-white/10 rounded-lg p-3 hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" name="goals" value="Weight Loss" className="text-yellow-500 rounded mr-3 focus:ring-yellow-500" />
+                    <span className="text-sm text-gray-300">Weight Loss</span>
                   </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="text-yellow-500 mr-2 rounded" />
-                    <span className="text-sm">Muscle Building</span>
+                  <label className="flex items-center bg-black border border-white/10 rounded-lg p-3 hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" name="goals" value="Muscle Building" className="text-yellow-500 rounded mr-3 focus:ring-yellow-500" />
+                    <span className="text-sm text-gray-300">Muscle Building</span>
                   </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="text-yellow-500 mr-2 rounded" />
-                    <span className="text-sm">Strength Training</span>
+                  <label className="flex items-center bg-black border border-white/10 rounded-lg p-3 hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" name="goals" value="Strength Training" className="text-yellow-500 rounded mr-3 focus:ring-yellow-500" />
+                    <span className="text-sm text-gray-300">Strength Training</span>
+                  </label>
+                  <label className="flex items-center bg-black border border-white/10 rounded-lg p-3 hover:bg-white/5 transition cursor-pointer">
+                    <input type="checkbox" name="goals" value="General Fitness" className="text-yellow-500 rounded mr-3 focus:ring-yellow-500" />
+                    <span className="text-sm text-gray-300">General Fitness</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Additional Notes</label>
-                <textarea rows={3} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition resize-none" placeholder="Any medical conditions or specific requirements..."></textarea>
+                <label className="block text-gray-300 font-bold text-sm mb-2 uppercase tracking-wide">
+                  Additional Notes
+                </label>
+                <textarea 
+                  name="notes"
+                  rows={3} 
+                  className="w-full px-4 py-3 bg-black border border-white/10 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition resize-none text-white placeholder-gray-500" 
+                  placeholder="Medical conditions, injuries, specific requirements..."
+                ></textarea>
               </div>
 
               <div className="pt-4">
-                <button type="submit" className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-xl font-semibold shadow-lg transition transform hover:scale-105">
-                  Book My Session 🔥
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-black py-4 rounded-xl font-black uppercase tracking-wider text-sm transition-all transform hover:-translate-y-1 shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Book My Session 🔥'}
                 </button>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  We'll contact you within 24 hours to confirm your session
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  We'll contact you within 24 hours to confirm
                 </p>
               </div>
             </form>
