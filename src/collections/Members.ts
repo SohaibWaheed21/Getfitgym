@@ -96,5 +96,21 @@ export const Members: CollectionConfig = {
         return data
       },
     ],
+    afterRead: [
+      ({ doc }) => {
+        // Recalculate days left and status on every read
+        if (doc.feeStartDate) {
+          const feeStart = new Date(doc.feeStartDate)
+          const expiryDate = new Date(feeStart.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
+          const today = new Date()
+          const timeDiff = expiryDate.getTime() - today.getTime()
+          const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+          
+          doc.daysLeft = daysLeft
+          doc.status = daysLeft > 0 ? 'Active' : 'Expired'
+        }
+        return doc
+      },
+    ],
   },
 }
