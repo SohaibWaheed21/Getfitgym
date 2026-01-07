@@ -4,8 +4,9 @@ export const Attendance: CollectionConfig = {
   slug: 'attendance',
   admin: {
     useAsTitle: 'id',
-    defaultColumns: ['member', 'date', 'checkmark'],
-    description: 'Mark daily attendance for gym members',
+    defaultColumns: ['member', 'date', 'checkmark', 'timestamp'],
+    description: 'Individual attendance records (auto-managed by bulk attendance)',
+    group: 'Attendance Management',
   },
   access: {
     read: () => true,

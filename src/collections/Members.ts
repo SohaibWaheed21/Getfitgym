@@ -5,6 +5,8 @@ export const Members: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['memberId', 'name', 'phone', 'feeStartDate', 'daysLeft', 'status'],
+    listSearchableFields: ['memberId', 'name', 'phone', 'cnic'],
+    description: 'Search by Member ID, Name, Phone, or CNIC',
   },
   access: {
     read: () => true,
