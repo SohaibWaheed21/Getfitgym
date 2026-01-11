@@ -1,71 +1,450 @@
-<<<<<<< HEAD
-# Gym-Management-Website
-=======
-# Payload Blank Template
+# Gym Management Website
 
-This template comes configured with the bare minimum to get started on anything you need.
+A comprehensive gym management system built with Next.js and PayloadCMS, featuring member management, trainer bookings, supplements store, and attendance tracking.
 
-## Quick start
+## 📋 Table of Contents
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Setup](#environment-setup)
+- [Running the Application](#running-the-application)
+- [Backend Admin Guide](#backend-admin-guide)
+- [Collections Overview](#collections-overview)
+- [API Routes](#api-routes)
+- [Deployment](#deployment)
 
-## Quick Start - local setup
+## Prerequisites
 
-To spin up this template locally, follow these steps:
+Before starting, ensure you have the following installed:
+- **Node.js** (v18 or higher)
+- **pnpm** (recommended) or npm
+- **MongoDB** (local installation or MongoDB Atlas account)
+- **Cloudinary Account** (for image management)
 
-### Clone
+## Installation
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd website
+   ```
 
-### Development
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+## Environment Setup
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+Create a `.env` file in the root directory with the following variables:
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+```env
+# MongoDB Connection
+MONGODB_URI=mongodb://127.0.0.1:27017/gym-management
+# or for MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/gym-management
 
-#### Docker (Optional)
+# Payload CMS Secret (generate a random string)
+PAYLOAD_SECRET=your-super-secret-key-here
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 
-To do so, follow these steps:
+# Next.js Configuration
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+```
 
-- Modify the `MONGODB_URI` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URI` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+### Getting Cloudinary Credentials:
+1. Sign up at [cloudinary.com](https://cloudinary.com)
+2. Go to Dashboard
+3. Copy Cloud Name, API Key, and API Secret
 
-## How it works
+## Running the Application
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+### Development Mode
 
-### Collections
+1. **Start MongoDB (if using Docker)**
+   ```bash
+   docker-compose up -d
+   ```
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+2. **Run the development server**
+   ```bash
+   pnpm dev
+   ```
 
-- #### Users (Authentication)
+3. **Access the application**
+   - Frontend: http://localhost:3000
+   - Admin Panel: http://localhost:3000/admin
 
-  Users are auth-enabled collections that have access to the admin panel.
+### Production Build
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+```bash
+pnpm build
+pnpm start
+```
 
-- #### Media
+## Backend Admin Guide
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+### First-Time Setup
 
-### Docker
+#### 1. Create Admin Account
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+When you first run the application:
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+1. Navigate to http://localhost:3000/admin
+2. You'll see the "Create First User" screen
+3. Fill in the details:
+   - **Email**: admin@gym.com (or your preferred email)
+   - **Password**: Create a strong password
+   - **Confirm Password**: Re-enter the password
+4. Click **Create**
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+🎉 You're now logged into the admin panel!
 
-## Questions
+### Admin Panel Overview
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
->>>>>>> master
+The admin panel sidebar contains all collections:
+
+```
+📊 Dashboard
+👥 Users         - Admin users who can access the backend
+👤 Members       - Gym members
+🏋️ Trainers      - Personal trainers
+💊 Supplements   - Store products
+📸 Media         - Image uploads
+📅 Bookings      - Training session bookings
+✅ Attendance    - Member check-ins
+📋 Bulk Attendance - Batch attendance records
+🛒 Orders        - Supplement orders
+🎯 Trial         - Trial session requests
+⚙️ Page Settings - Website configuration
+```
+
+### How to Add/Manage Data
+
+#### Adding Members
+
+1. Click **Members** in the sidebar
+2. Click **Create New** button
+3. Fill in the form:
+   - **Name**: Member's full name
+   - **Email**: Contact email
+   - **Phone**: Contact number
+   - **Membership Type**: (e.g., Monthly, Yearly)
+   - **Join Date**: When they joined
+   - **Status**: Active/Inactive
+4. Click **Save**
+
+#### Adding Trainers
+
+1. Click **Trainers** in the sidebar
+2. Click **Create New**
+3. Fill in:
+   - **Name**: Trainer's full name
+   - **Specialization**: (e.g., "Weight Loss, Muscle Building")
+   - **Experience**: Years of experience
+   - **Bio**: Short description
+   - **Image**: Upload profile photo
+   - **Hourly Rate**: Price per session
+   - **Availability**: Working hours/days
+4. Click **Save**
+
+#### Adding Supplements
+
+1. Click **Supplements** in the sidebar
+2. Click **Create New**
+3. Fill in:
+   - **Name**: Product name
+   - **Description**: Product details
+   - **Price**: Amount
+   - **Category**: (e.g., Protein, Pre-Workout)
+   - **Stock**: Available quantity
+   - **Image**: Product photo (uploads to Cloudinary)
+   - **Featured**: Check if you want it on homepage
+4. Click **Save**
+
+#### Managing Page Settings
+
+1. Click **Page Settings** in the sidebar
+2. Configure:
+   - **Site Title**: Website name
+   - **Tagline**: Homepage tagline
+   - **Contact Information**: Phone, email, address
+   - **Social Media Links**: Facebook, Instagram, Twitter
+   - **Pricing Plans**: Monthly/yearly membership costs
+   - **Hero Images**: Homepage banners
+   - **About Section**: Gym description
+3. Click **Save**
+
+#### Recording Attendance
+
+**Individual Attendance:**
+1. Click **Attendance** in the sidebar
+2. Click **Create New**
+3. Select:
+   - **Member**: From dropdown
+   - **Date**: Check-in date/time
+   - **Type**: Check-in or Check-out
+4. Click **Save**
+
+**Bulk Attendance:**
+1. Click **Bulk Attendance**
+2. Click **Create New**
+3. Select multiple members
+4. Set date and time
+5. Click **Save** to record all at once
+
+#### Managing Bookings
+
+1. Click **Bookings** in the sidebar
+2. View all trainer booking requests
+3. Click on a booking to:
+   - View details
+   - Update status (Pending/Confirmed/Cancelled)
+   - Add notes
+4. Click **Save**
+
+#### Processing Orders
+
+1. Click **Orders** in the sidebar
+2. View supplement orders
+3. Click on an order to:
+   - See items ordered
+   - Update status (Pending/Processing/Completed)
+   - View customer details
+4. Click **Save**
+
+#### Handling Trial Requests
+
+1. Click **Trial** in the sidebar
+2. View trial session requests
+3. Process each request:
+   - Contact the person
+   - Schedule trial session
+   - Update status
+4. Click **Save**
+
+### Media Management
+
+#### Uploading Images
+
+1. Click **Media** in the sidebar
+2. Click **Create New** or drag & drop files
+3. Images are automatically uploaded to Cloudinary
+4. Images are available for use in:
+   - Trainer profiles
+   - Supplement products
+   - Page settings banners
+
+#### Image Features:
+- Automatic optimization
+- Responsive sizing
+- Cloud storage (Cloudinary)
+- Focal point selection
+
+### User Management
+
+#### Adding Admin Users
+
+1. Click **Users** in the sidebar
+2. Click **Create New**
+3. Fill in:
+   - **Email**: User's email
+   - **Password**: Create password
+   - **Role**: Admin or Editor
+4. Click **Save**
+
+#### User Roles:
+- **Admin**: Full access to all features
+- **Editor**: Can manage content but not users
+
+### Login & Authentication
+
+#### Logging In
+
+1. Go to http://localhost:3000/admin
+2. Enter your email and password
+3. Click **Login**
+
+#### Forgot Password
+
+1. Click **Forgot Password** on login page
+2. Enter your email
+3. Follow reset instructions sent to email
+
+#### Logout
+
+1. Click your email in top-right corner
+2. Click **Logout**
+
+### Search & Filters
+
+Each collection has search and filter capabilities:
+
+1. **Search Bar**: Type to search by name, email, etc.
+2. **Filters**: Click filter icon to filter by:
+   - Status
+   - Date range
+   - Category
+   - Custom fields
+3. **Sort**: Click column headers to sort
+
+### Bulk Operations
+
+1. Select multiple items using checkboxes
+2. Click **Actions** dropdown
+3. Choose action:
+   - Delete selected
+   - Update status
+   - Export data
+
+## Collections Overview
+
+### Members Collection
+- **Purpose**: Store gym member information
+- **Fields**: Name, email, phone, membership type, status
+- **Access**: Admin panel only
+
+### Trainers Collection
+- **Purpose**: Manage personal trainers
+- **Fields**: Name, specialization, bio, image, rate, availability
+- **Access**: Admin panel + Public API (read-only)
+
+### Supplements Collection
+- **Purpose**: E-commerce product catalog
+- **Fields**: Name, price, description, image, stock, category
+- **Access**: Admin panel + Public API (read-only)
+
+### Bookings Collection
+- **Purpose**: Track training session bookings
+- **Fields**: Member, trainer, date, time, status
+- **Access**: Admin panel + API
+
+### Attendance Collection
+- **Purpose**: Record member check-ins
+- **Fields**: Member, date, time, type (in/out)
+- **Access**: Admin panel + API
+
+### Orders Collection
+- **Purpose**: Supplement purchase orders
+- **Fields**: Customer info, items, total, status
+- **Access**: Admin panel + API
+
+### Page Settings Collection
+- **Purpose**: Website configuration
+- **Fields**: Site info, pricing, contact details
+- **Access**: Admin panel + Public API (read-only)
+
+## API Routes
+
+### Custom API Endpoints
+
+#### Attendance API
+```
+POST /api/attendance
+Body: { memberId, date, type }
+```
+
+#### Bookings API
+```
+POST /api/bookings
+Body: { memberId, trainerId, date, time }
+```
+
+### Payload REST API
+
+All collections are automatically available via REST API:
+
+```
+GET    /api/members
+POST   /api/members
+GET    /api/members/:id
+PATCH  /api/members/:id
+DELETE /api/members/:id
+```
+
+Replace `members` with any collection name: `trainers`, `supplements`, `bookings`, etc.
+
+### GraphQL API
+
+Available at: http://localhost:3000/api/graphql
+
+Example query:
+```graphql
+query {
+  Trainers {
+    docs {
+      name
+      specialization
+      hourlyRate
+    }
+  }
+}
+```
+
+## Deployment
+
+### Vercel Deployment
+
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+### Environment Variables for Production
+
+Ensure these are set in your hosting platform:
+- `MONGODB_URI` - Production MongoDB connection
+- `PAYLOAD_SECRET` - Strong secret key
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `NEXT_PUBLIC_SERVER_URL` - Your production URL
+
+## Troubleshooting
+
+### MongoDB Connection Issues
+- Verify MongoDB is running: `mongosh`
+- Check MONGODB_URI in `.env`
+- Ensure IP whitelist (MongoDB Atlas)
+
+### Admin Panel Not Loading
+- Clear browser cache
+- Check console for errors
+- Verify PAYLOAD_SECRET is set
+
+### Images Not Uploading
+- Verify Cloudinary credentials
+- Check file size limits
+- Ensure proper file format (jpg, png, webp)
+
+### Build Errors
+```bash
+rm -rf .next
+pnpm dev
+```
+
+## Scripts
+
+```bash
+pnpm dev          # Development server
+pnpm build        # Production build
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+pnpm test         # Run tests
+pnpm test:e2e     # Run E2E tests
+```
+
+## Support
+
+For issues or questions:
+- Check documentation: [PayloadCMS Docs](https://payloadcms.com/docs)
+- Review existing issues
+- Contact development team
+
+---
+
+**Built with** ❤️ **using Next.js, PayloadCMS, MongoDB, and Cloudinary**
