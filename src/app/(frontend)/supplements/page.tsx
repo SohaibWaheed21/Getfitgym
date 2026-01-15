@@ -3,6 +3,9 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import SupplementsClient from './SupplementsClient'
 
+export const revalidate = 0 // Disable caching to always fetch fresh data
+export const dynamic = 'force-dynamic'
+
 export default async function SupplementsPage() {
   let supplements = []
   let pageSettings = null

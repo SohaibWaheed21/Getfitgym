@@ -70,7 +70,7 @@ export default function CheckoutModal({ open, onClose }: { open: boolean; onClos
   const handleWhatsAppOrder = () => {
     const message = `*New Order*\n\nName: ${formData.name}\nPhone: ${formData.phone}\nAddress: ${formData.address}\n\n*Items:*\n${cart.map(item => `${item.name} x ${item.quantity} = PKR ${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n*Total: PKR ${totalAmount.toLocaleString()}*`
     
-    const whatsappUrl = `https://wa.me/923143586891?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/923138884736?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
     
     clearCart()

@@ -205,7 +205,7 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </a>
             <a
-              href="https://wa.me/923143586891"
+              href="https://wa.me/923138884736"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 border-2 border-white/20 hover:border-[#F5C211]/50 text-white font-['Bebas_Neue'] font-semibold text-lg px-8 py-4 rounded-full transition-all duration-300 hover:bg-[#141414]"
@@ -472,7 +472,7 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
           <div>
             <h3 className="font-['Bebas_Neue'] text-2xl font-bold text-[#F5C211] mb-4">Contact</h3>
             <p>Email: <a href="mailto:getfitness01@gmail.com" className="hover:text-[#F5C211] transition">getfitness01@gmail.com</a></p>
-            <p>Phone: <a href="tel:+923143586891" className="hover:text-[#F5C211] transition">+92 3143586891</a></p>
+            <p>Phone: <a href="tel:+923138884736" className="hover:text-[#F5C211] transition">+92 3138884736</a></p>
             <p>Address: Islampura Alamgir road Lahore, Pakistan</p>
           </div>
         </div>

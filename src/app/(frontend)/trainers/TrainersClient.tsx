@@ -477,7 +477,7 @@ export default function TrainersClient({
               <h4 className="text-sm font-black text-white mb-3 uppercase tracking-wider">Contact</h4>
               <div className="space-y-2 text-sm text-gray-400">
                 <p><a href="mailto:getfitness01@gmail.com" className="hover:text-yellow-400 transition">getfitness01@gmail.com</a></p>
-                <p><a href="tel:+923143586891" className="hover:text-yellow-400 transition">+92 314 358 6891</a></p>
+                <p><a href="tel:+923138884736" className="hover:text-yellow-400 transition">+92 313 888 4736</a></p>
                 <p>Islampura, Lahore, PK</p>
               </div>
             </div>

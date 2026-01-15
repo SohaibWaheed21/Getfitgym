@@ -1,0 +1,48 @@
+:root {
+  --payload-background-color: #0A0A0A;
+  --payload-text-color: #ffffff;
+}
+
+/* Hide Payload logo/text in navigation */
+.nav__wrap .nav__brand {
+  &::before {
+    content: 'GetFit Gym';
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #F5C211;
+  }
+  
+  svg {
+    display: none;
+  }
+}
+
+/* Replace "Payload" text on login page */
+.template-default.template-default--has-bg {
+  h1 {
+    font-size: 0;
+    
+    &::before {
+      content: 'GetFit Gym';
+      font-size: 2rem;
+      font-weight: bold;
+      color: #F5C211;
+      display: block;
+    }
+  }
+}
+
+/* Also target the account view */
+.account {
+  h1 {
+    font-size: 0;
+    
+    &::before {
+      content: 'GetFit Gym';
+      font-size: 2rem;
+      font-weight: bold;
+      color: #F5C211;
+      display: block;
+    }
+  }
+}

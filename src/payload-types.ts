@@ -73,6 +73,7 @@ export interface Config {
     bookings: Booking;
     supplements: Supplement;
     members: Member;
+    'bulk-attendance': BulkAttendance;
     attendance: Attendance;
     'page-settings': PageSetting;
     trial: Trial;
@@ -90,6 +91,7 @@ export interface Config {
     bookings: BookingsSelect<false> | BookingsSelect<true>;
     supplements: SupplementsSelect<false> | SupplementsSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
+    'bulk-attendance': BulkAttendanceSelect<false> | BulkAttendanceSelect<true>;
     attendance: AttendanceSelect<false> | AttendanceSelect<true>;
     'page-settings': PageSettingsSelect<false> | PageSettingsSelect<true>;
     trial: TrialSelect<false> | TrialSelect<true>;
@@ -296,6 +298,8 @@ export interface Supplement {
   createdAt: string;
 }
 /**
+ * Search by Member ID, Name, Phone, or CNIC
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "members".
  */
@@ -331,7 +335,34 @@ export interface Member {
   createdAt: string;
 }
 /**
- * Mark daily attendance for gym members
+ * Mark attendance for multiple members at once
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bulk-attendance".
+ */
+export interface BulkAttendance {
+  id: string;
+  /**
+   * Select the date for attendance
+   */
+  attendanceDate: string;
+  /**
+   * Select all members who are present
+   */
+  presentMembers?: (string | Member)[] | null;
+  /**
+   * Total members marked present
+   */
+  totalPresent?: number | null;
+  /**
+   * Optional notes for this attendance session
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Individual attendance records (auto-managed by bulk attendance)
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "attendance".
@@ -494,6 +525,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'members';
         value: string | Member;
+      } | null)
+    | ({
+        relationTo: 'bulk-attendance';
+        value: string | BulkAttendance;
       } | null)
     | ({
         relationTo: 'attendance';
@@ -686,6 +721,18 @@ export interface MembersSelect<T extends boolean = true> {
   pricePaid?: T;
   status?: T;
   daysLeft?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bulk-attendance_select".
+ */
+export interface BulkAttendanceSelect<T extends boolean = true> {
+  attendanceDate?: T;
+  presentMembers?: T;
+  totalPresent?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

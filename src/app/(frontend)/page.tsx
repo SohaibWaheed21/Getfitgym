@@ -512,7 +512,7 @@ export default function HomePage() {
           <div>
             <h3 className="font-['Bebas_Neue'] text-2xl text-[#F5C211] mb-4">Contact</h3>
             <p>Email: <a href="mailto:getfitness01@gmail.com" className="hover:text-[#F5C211] transition">getfitness01@gmail.com</a></p>
-            <p>Phone: <a href="tel:+923143586891" className="hover:text-[#F5C211] transition">+92 3143586891</a></p>
+            <p>Phone: <a href="tel:+923138884736" className="hover:text-[#F5C211] transition">+92 3138884736</a></p>
             <p>Address: Islampura Alamgir road Lahore, Pakistan</p>
           </div>
         </div>
