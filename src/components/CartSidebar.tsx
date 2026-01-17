@@ -19,7 +19,7 @@ export default function CartSidebar({
       return
     }
 
-    const phone = '923214647895'
+    const phone = '923138884736'
     const lines = cart.map((item, idx) => {
       const lineTotal = (item.price * item.quantity).toLocaleString()
       return `${idx + 1}. ${item.name} x ${item.quantity} = PKR ${lineTotal}`

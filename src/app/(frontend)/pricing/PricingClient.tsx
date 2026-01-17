@@ -55,7 +55,7 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
         "Locker room access",
       ],
       imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80",
-      whatsappLink: "https://wa.me/923001234567?text=Hi!%20I%20want%20to%20start%20the%20Cardio%20Plan",
+      whatsappLink: "https://wa.me/923138884736?text=Hi!%20I%20want%20to%20start%20the%20Cardio%20Plan",
       isPopular: false,
     },
     {
@@ -71,7 +71,7 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
         "Nutrition consultation",
       ],
       imageUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80",
-      whatsappLink: "https://wa.me/923001234567?text=Hi!%20I%20want%20to%20start%20the%20Combined%20Plan",
+      whatsappLink: "https://wa.me/923138884736?text=Hi!%20I%20want%20to%20start%20the%20Combined%20Plan",
       isPopular: true,
     },
     {
@@ -87,7 +87,7 @@ export default function PricingClient({ pageSettings }: { pageSettings: PageSett
         "Nutrition consultation",
       ],
       imageUrl: "https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=800&q=80",
-      whatsappLink: "https://wa.me/923001234567?text=Hi!%20I%20want%20to%20start%20the%20Non-Cardio%20Plan",
+      whatsappLink: "https://wa.me/923138884736?text=Hi!%20I%20want%20to%20start%20the%20Non-Cardio%20Plan",
       isPopular: false,
     },
   ]

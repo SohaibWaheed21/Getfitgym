@@ -3,8 +3,10 @@
   --payload-text-color: #ffffff;
 }
 
-/* Hide Payload logo/text in navigation */
+/* Hide Payload logo and replace with GetFit Gym in navigation */
 .nav__wrap .nav__brand {
+  font-size: 0 !important;
+  
   &::before {
     content: 'GetFit Gym';
     font-size: 1.5rem;
@@ -12,37 +14,46 @@
     color: #F5C211;
   }
   
-  svg {
-    display: none;
+  svg, img {
+    display: none !important;
   }
 }
 
-/* Replace "Payload" text on login page */
-.template-default.template-default--has-bg {
-  h1 {
-    font-size: 0;
-    
-    &::before {
-      content: 'GetFit Gym';
-      font-size: 2rem;
-      font-weight: bold;
-      color: #F5C211;
-      display: block;
-    }
+/* Hide Payload logo on login page */
+.template-default .template-default__brand {
+  display: none !important;
+}
+
+/* Replace "Payload" heading text on login page */
+.template-default h1 {
+  font-size: 0 !important;
+  
+  &::before {
+    content: 'GetFit Gym';
+    font-size: 2rem;
+    font-weight: bold;
+    color: #F5C211;
+    display: block;
   }
 }
 
-/* Also target the account view */
-.account {
-  h1 {
-    font-size: 0;
-    
-    &::before {
-      content: 'GetFit Gym';
-      font-size: 2rem;
-      font-weight: bold;
-      color: #F5C211;
-      display: block;
-    }
+/* Hide the Payload logo image at top of login page */
+.template-default__wrap > svg,
+.template-default__wrap > img,
+.template-default__brand svg,
+.template-default__brand img {
+  display: none !important;
+}
+
+/* Target login form specifically */
+form[method="POST"] h1 {
+  font-size: 0 !important;
+  
+  &::before {
+    content: 'GetFit Gym';
+    font-size: 2rem;
+    font-weight: bold;
+    color: #F5C211;
+    display: block;
   }
 }
